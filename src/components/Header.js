@@ -5,14 +5,31 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from '../assets/images/logo.png'; // Adjust the path according to your structure
+import AnchorTemporaryDrawer from './Sidebar';
 
 const Header = () => {
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+
+  // Define the toggleDrawer function
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setState({ ...state, [anchor]: open });
+  };
+
   return (
     <>
       <Container fluid className="p-3 bg-dark text-light">
         <Row className="align-items-center">
           <Col xs="auto" className="d-flex align-items-center">
-            <IconButton className="text-light">
+            {/* Use 'left' as the anchor */}
+            <IconButton className="text-light" onClick={toggleDrawer('left', true)}>
               <MenuIcon />
             </IconButton>
             <img 
@@ -31,10 +48,12 @@ const Header = () => {
             </IconButton>
           </Col>
         </Row>
+        {/* Ensure state and toggleDrawer are passed correctly */}
+        <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
       </Container>
       <Divider />
     </>
-  )
+  );
 }
 
 export default Header;

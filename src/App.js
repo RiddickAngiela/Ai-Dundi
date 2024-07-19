@@ -10,35 +10,28 @@ import Login from './Authentication/Login';
 import Signup from './Authentication/Signup';
 
 function App() {
-
   const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-
-
+    palette: {
+      mode: 'dark',
+    },
+  });
 
   return (
     <ThemeProvider theme={darkTheme}>
       <Router>
-      <Container>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          
-        </Routes>
-        <Footer />
-      </Container>
-    </Router>
+        <Container>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+          <Footer />
+        </Container>
+      </Router>
     </ThemeProvider>
-    
   );
 }
 
