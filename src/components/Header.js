@@ -35,7 +35,12 @@ const Header = () => {
             <img 
               src={logo} 
               alt="Logo" 
-              style={{ height: '60px', marginLeft: '10px' }} // Increased height
+              style={{ 
+                height: '60px', 
+                width: '60px', // Set width equal to height
+                borderRadius: '50%', // Makes the image round
+                marginLeft: '10px' 
+              }} 
             />
             <Typography variant='h4' className="ml-2">Ai-Dundi</Typography> {/* Placing the name next to the logo */}
           </Col>
