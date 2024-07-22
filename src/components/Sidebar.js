@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -34,7 +33,7 @@ export default function AnchorTemporaryDrawer({state,setState, toggleDrawer}) {
       </List>
       <Divider />
       <List>
-        {['Analytic Report','Marketing & Promotions','Investment','F.A.Q', 'Trash', 'Spam'].map((text, index) => (
+        {['Analytic Report','Marketing & Promotions','Investment','F.A.Q', 'Trash'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemIcon>

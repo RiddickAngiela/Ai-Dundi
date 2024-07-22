@@ -1,4 +1,4 @@
-// src/Login.js
+
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Paper } from '@mui/material';
 
@@ -7,7 +7,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Handle login logic here
     console.log('Email:', email);
     console.log('Password:', password);
   };

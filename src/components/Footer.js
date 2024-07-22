@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 
 const Footer = () => {
   return (
@@ -19,14 +20,15 @@ const Footer = () => {
           py: 2,
           textAlign: 'center',
         }}
+        className="bg-light text-dark py-3" // Bootstrap classes for background and text color
       >
         <Container>
-          <Typography variant="body1">
-            <Link href="/about" color="inherit" sx={{ mx: 1 }}>
+          <Typography variant="body1" className="d-flex justify-content-center align-items-center">
+            <Link href="/about" color="inherit" sx={{ mx: 1 }} className="mx-2">
               About
             </Link>
             &copy; 2024. Terms of Service and use of Privacy Policy.
-            <Link href="/contact" color="inherit" sx={{ mx: 1 }}>
+            <Link href="/contact" color="inherit" sx={{ mx: 1 }} className="mx-2">
               Contact
             </Link>
           </Typography>
