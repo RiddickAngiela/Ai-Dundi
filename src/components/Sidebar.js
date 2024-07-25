@@ -7,10 +7,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import HomeIcon from '@mui/icons-material/Home';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PaymentIcon from '@mui/icons-material/Payment';
+import InfoIcon from '@mui/icons-material/Info';
+import SupportIcon from '@mui/icons-material/Support';
+import SecurityIcon from '@mui/icons-material/Security';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import InvestIcon from '@mui/icons-material/AccountBalance';
+import FaqIcon from '@mui/icons-material/QuestionAnswer';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function AnchorTemporaryDrawer({state,setState, toggleDrawer}) {
+export default function AnchorTemporaryDrawer({ state, setState, toggleDrawer }) {
 
   const list = (anchor) => (
     <Box
@@ -20,11 +29,16 @@ export default function AnchorTemporaryDrawer({state,setState, toggleDrawer}) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['Home', 'L.A.P', 'L.P.M', 'D.I.C','Customer Support','Security & Compliance'].map((text, index) => (
+        {['Home', 'Loan', 'Payment Process', 'D.I.C', 'Customer Support', 'Security & Compliance'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {text === 'Home' && <HomeIcon />}
+                {text === 'Loan' && <AttachMoneyIcon />}
+                {text === 'Payment Process' && <PaymentIcon />}
+                {text === 'D.I.C' && <InfoIcon />}
+                {text === 'Customer Support' && <SupportIcon />}
+                {text === 'Security & Compliance' && <SecurityIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
@@ -33,11 +47,15 @@ export default function AnchorTemporaryDrawer({state,setState, toggleDrawer}) {
       </List>
       <Divider />
       <List>
-        {['Analytic Report','Marketing & Promotions','Investment','F.A.Q', 'Trash'].map((text, index) => (
+        {['Analytic Report', 'Marketing & Promotions', 'Investment', 'F.A.Q', 'Trash'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {text === 'Analytic Report' && <AnalyticsIcon />}
+                {text === 'Marketing & Promotions' && <CampaignIcon />}
+                {text === 'Investment' && <InvestIcon />}
+                {text === 'F.A.Q' && <FaqIcon />}
+                {text === 'Trash' && <DeleteIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
