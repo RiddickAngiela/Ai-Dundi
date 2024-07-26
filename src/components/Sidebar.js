@@ -1,12 +1,14 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -19,44 +21,46 @@ import InvestIcon from '@mui/icons-material/AccountBalance';
 import FaqIcon from '@mui/icons-material/QuestionAnswer';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function AnchorTemporaryDrawer({ state, setState, toggleDrawer }) {
+export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const list = (anchor) => (
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setIsOpen(open);
+  };
+
+  const navigateTo = (path) => {
+    navigate(path);
+    setIsOpen(false);
+  };
+
+  const list = () => (
     <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      sx={{ width: 250 }}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {['Home', 'Loan', 'Payment Process', 'D.I.C', 'Customer Support', 'Security & Compliance'].map((text, index) => (
+        {[
+          { text: 'Home', icon: <HomeIcon />, path: '/home' },
+          { text: 'Loan', icon: <AttachMoneyIcon />, path: '/loan' },
+          { text: 'Payment Process', icon: <PaymentIcon />, path: '/payment-process' },
+          { text: 'D.I.C', icon: <InfoIcon />, path: '/dic' },
+          { text: 'Customer Support', icon: <SupportIcon />, path: '/customer-support' },
+          { text: 'Security & Compliance', icon: <SecurityIcon />, path: '/security-compliance' },
+          { text: 'Analytic Report', icon: <AnalyticsIcon />, path: '/analytic-report' },
+          { text: 'Marketing & Promotions', icon: <CampaignIcon />, path: '/marketing-promotions' },
+          { text: 'Investment', icon: <InvestIcon />, path: '/investment' },
+          { text: 'F.A.Q', icon: <FaqIcon />, path: '/faq' },
+          { text: 'Trash', icon: <DeleteIcon />, path: '/trash' },
+        ].map(({ text, icon, path }) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {text === 'Home' && <HomeIcon />}
-                {text === 'Loan' && <AttachMoneyIcon />}
-                {text === 'Payment Process' && <PaymentIcon />}
-                {text === 'D.I.C' && <InfoIcon />}
-                {text === 'Customer Support' && <SupportIcon />}
-                {text === 'Security & Compliance' && <SecurityIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['Analytic Report', 'Marketing & Promotions', 'Investment', 'F.A.Q', 'Trash'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {text === 'Analytic Report' && <AnalyticsIcon />}
-                {text === 'Marketing & Promotions' && <CampaignIcon />}
-                {text === 'Investment' && <InvestIcon />}
-                {text === 'F.A.Q' && <FaqIcon />}
-                {text === 'Trash' && <DeleteIcon />}
-              </ListItemIcon>
+            <ListItemButton onClick={() => navigateTo(path)}>
+              <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -67,17 +71,21 @@ export default function AnchorTemporaryDrawer({ state, setState, toggleDrawer })
 
   return (
     <div>
-      {['left'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
+      <IconButton
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        onClick={toggleDrawer(true)}
+      >
+        <MenuIcon />
+      </IconButton>
+      <Drawer
+        anchor="left"
+        open={isOpen}
+        onClose={toggleDrawer(false)}
+      >
+        {list()}
+      </Drawer>
     </div>
   );
 }
