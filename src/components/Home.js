@@ -3,20 +3,19 @@ import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
-import { Pie } from 'react-chartjs-2'; // Assuming you'll use chart.js for pie chart
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js'; // Chart.js components
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
 const WelcomeMessage = styled('div')(({ theme }) => ({
-  textAlign: 'center',
   marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(4),
   padding: theme.spacing(2),
   backgroundColor: '#f5f5f5',
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
+  textAlign: 'left',
 }));
 
 const BalanceCard = styled(Card)(({ theme }) => ({
@@ -93,33 +92,35 @@ const Home = () => {
 
   return (
     <Container>
-      <WelcomeMessage> 
+      <WelcomeMessage>
         <Typography variant="h4">Welcome, User!</Typography>
-        <Typography variant="body1" paragraph>
-          We are delighted to have you here! Explore our services, manage your finances, and take advantage of our
-          exclusive offers designed just for you. Your financial well-being is our top priority.
-        </Typography>
       </WelcomeMessage>
-      <BalanceCard>
-        <Typography variant="h5">Balance: $0.00</Typography>
-        <Row className="mt-4">
-          <Col>
-            <Button variant="primary">Deposit</Button>
-          </Col>
-          <Col>
-            <Button variant="secondary">Withdrawal</Button>
-          </Col>
-        </Row>
-      </BalanceCard>
-      <Button variant="success" className="d-block mx-auto mb-4">Apply</Button>
-      <PartnersContainer>
-        {['Bank A', 'Bank B', 'Bank C', 'Bank D'].map((bank) => (
-          <PartnerCard key={bank}>
-            <Avatar>{bank[0]}</Avatar>
-            <PartnerText variant="body2">{bank}</PartnerText>
-          </PartnerCard>
-        ))}
-      </PartnersContainer>
+      <Row className="mt-5">
+        <Col md={4} className="mb-4">
+          <BalanceCard>
+            <Typography variant="h5">Balance: $0.00</Typography>
+            <Row className="mt-4">
+              <Col>
+                <Button variant="primary">Deposit</Button>
+              </Col>
+              <Col>
+                <Button variant="secondary">Withdrawal</Button>
+              </Col>
+            </Row>
+          </BalanceCard>
+          <Button variant="success" className="d-block mx-auto mb-4">Apply</Button>
+        </Col>
+        <Col md={8}>
+          <PartnersContainer>
+            {['Bank A', 'Bank B', 'Bank C', 'Bank D'].map((bank) => (
+              <PartnerCard key={bank}>
+                <Avatar>{bank[0]}</Avatar>
+                <PartnerText variant="body2">{bank}</PartnerText>
+              </PartnerCard>
+            ))}
+          </PartnersContainer>
+        </Col>
+      </Row>
       <Row className="mt-4">
         <Col md={4}>
           <AnalyticsCard>
