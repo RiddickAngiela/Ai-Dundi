@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import ApplicationForm from '../components2/Loanfolder/ApplicationForm'; // Import the ApplicationForm component
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
@@ -81,6 +82,17 @@ const LoanSummaryCard = styled(Card)(({ theme }) => ({
 }));
 
 const Home = () => {
+  // State for dialog
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   // Sample data for the pie chart
   const data = {
     labels: ['Income', 'Expenses', 'Savings'],
@@ -108,7 +120,7 @@ const Home = () => {
               </Col>
             </Row>
           </BalanceCard>
-          <Button variant="success" className="d-block mx-auto mb-4">Apply</Button>
+          <Button variant="success" className="d-block mx-auto mb-4" onClick={handleClickOpen}>Apply</Button>
         </Col>
         <Col md={8}>
           <PartnersContainer>
@@ -145,6 +157,9 @@ const Home = () => {
           </LoanSummaryCard>
         </Col>
       </Row>
+
+      {/* Loan Application Dialog */}
+      <ApplicationForm open={open} handleClose={handleClose} />
     </Container>
   );
 };

@@ -8,9 +8,9 @@ import About from './components/About';
 import Contact from './components/Contact';
 import { Login } from './Authentication/Login';
 import { Signup } from './Authentication/Signup';
+import './index.css';
 
-
-import Loan from './components2/Loan';
+import Loan from './components2/Loanfolder/Loan';
 import PaymentProcess from './components2/PaymentProcess';
 import DIC from './components2/DIC';
 import CustomerSupport from './components2/CustomerSupport';
@@ -21,6 +21,8 @@ import Investment from './components2/Investment';
 import FAQ from './components2/FAQ';
 import Trash from './components2/Trash';
 
+import { TrashProvider } from './context/TrashContext';
+
 function App() {
   const darkTheme = createTheme({
     palette: {
@@ -30,31 +32,32 @@ function App() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Router>
-        <Container>
-          <Header />
-         
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/loan" element={<Loan />} />
-            <Route path="/payment-process" element={<PaymentProcess />} />
-            <Route path="/dic" element={<DIC />} />
-            <Route path="/customer-support" element={<CustomerSupport />} />
-            <Route path="/security-compliance" element={<SecurityCompliance />} />
-            <Route path="/analytic-report" element={<AnalyticReport />} />
-            <Route path="/marketing-promotions" element={<MarketingPromotions />} />
-            <Route path="/investment" element={<Investment />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/trash" element={<Trash />} />
-          </Routes>
-          <Footer />
-        </Container>
-      </Router>
+      <TrashProvider>
+        <Router>
+          <Container>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/loan" element={<Loan />} />
+              <Route path="/payment-process" element={<PaymentProcess />} />
+              <Route path="/dic" element={<DIC />} />
+              <Route path="/customer-support" element={<CustomerSupport />} />
+              <Route path="/security-compliance" element={<SecurityCompliance />} />
+              <Route path="/analytic-report" element={<AnalyticReport />} />
+              <Route path="/marketing-promotions" element={<MarketingPromotions />} />
+              <Route path="/investment" element={<Investment />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/trash" element={<Trash />} />
+            </Routes>
+            <Footer />
+          </Container>
+        </Router>
+      </TrashProvider>
     </ThemeProvider>
   );
 }

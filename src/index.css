@@ -1,0 +1,22 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  font-family: Arial, sans-serif; 
+}
+
+
+.container {
+  background-color: rgba(255, 255, 255, 0.8); 
+  padding: 20px; 
+}
+
+
+.header {
+  background: rgba(0, 0, 0, 0.5); 
+  color: white; 
+  padding: 10px;
+}

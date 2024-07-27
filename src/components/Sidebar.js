@@ -49,7 +49,7 @@ export default function Sidebar() {
           { text: 'Home', icon: <HomeIcon />, path: '/home' },
           { text: 'Loan', icon: <AttachMoneyIcon />, path: '/loan' },
           { text: 'Payment Process', icon: <PaymentIcon />, path: '/payment-process' },
-          { text: 'D.I.C', icon: <InfoIcon />, path: '/dic' },
+          { text: 'Interst Calculation', icon: <InfoIcon />, path: '/dic' },
           { text: 'Customer Support', icon: <SupportIcon />, path: '/customer-support' },
           { text: 'Security & Compliance', icon: <SecurityIcon />, path: '/security-compliance' },
           { text: 'Analytic Report', icon: <AnalyticsIcon />, path: '/analytic-report' },

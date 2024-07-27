@@ -3,7 +3,6 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Divider, IconButton, Typography } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import logo from '../assets/images/logo.png'; // Adjust the path according to your structure
 import AnchorTemporaryDrawer from './Sidebar';
 
 const Header = () => {
@@ -27,16 +26,6 @@ const Header = () => {
       <Container fluid className="p-3 bg-dark text-light">
         <Row className="align-items-center">
           <Col xs="auto" className="d-flex align-items-center">
-            <img 
-              src={logo} 
-              alt="Logo" 
-              style={{ 
-                height: '60px', 
-                width: '60px', // Set width equal to height
-                borderRadius: '50%', // Makes the image round
-                marginLeft: '10px' 
-              }} 
-            />
             <Typography variant="h4" className="ml-2">Ai-Dundi</Typography> {/* Placing the name next to the logo */}
           </Col>
           <Col className="d-flex justify-content-end">
