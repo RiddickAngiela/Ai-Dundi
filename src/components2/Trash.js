@@ -1,6 +1,6 @@
 // src/components2/Trash.js
 import React from 'react';
-import { useTrash } from '../context/TrashContext';
+import { useTrash } from '../contexts/TrashContext';
 import { Container, Typography, List, ListItem, ListItemText, Button, Paper } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 

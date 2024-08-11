@@ -16,10 +16,10 @@ const WelcomeMessage = styled('div')(({ theme }) => ({
   backgroundColor: '#f5f5f5',
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
-  textAlign: 'left',
+  textAlign: 'center',
 }));
 
-const BalanceCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(4),
   marginBottom: theme.spacing(4),
@@ -41,44 +41,18 @@ const PartnerCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: theme.spacing(12),
-  height: theme.spacing(12),
+  width: theme.spacing(14),
+  height: theme.spacing(14),
   borderRadius: '50%',
   boxShadow: theme.shadows[3],
   padding: theme.spacing(2),
   backgroundColor: '#fff',
   border: '1px solid #e0e0e0',
+  textAlign: 'center',
 }));
 
 const PartnerText = styled(Typography)(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-}));
-
-const AnalyticsCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-  backgroundColor: '#fff',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[5],
-  border: '1px solid #e0e0e0',
-}));
-
-const BankDetailsCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-  backgroundColor: '#fff',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[5],
-  border: '1px solid #e0e0e0',
-}));
-
-const LoanSummaryCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-  backgroundColor: '#fff',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[5],
-  border: '1px solid #e0e0e0',
+  marginTop: theme.spacing(1),
 }));
 
 const Home = () => {
@@ -105,11 +79,13 @@ const Home = () => {
   return (
     <Container>
       <WelcomeMessage>
-        <Typography variant="h4">Welcome, User!</Typography>
+        <Typography variant="h4">Welcome to Your Financial Future!</Typography>
+        <Typography variant="body1">Explore our loan options and take control of your finances today.</Typography>
       </WelcomeMessage>
+
       <Row className="mt-5">
         <Col md={4} className="mb-4">
-          <BalanceCard>
+          <StyledCard>
             <Typography variant="h5">Balance: $0.00</Typography>
             <Row className="mt-4">
               <Col>
@@ -119,42 +95,47 @@ const Home = () => {
                 <Button variant="secondary">Withdrawal</Button>
               </Col>
             </Row>
-          </BalanceCard>
-          <Button variant="success" className="d-block mx-auto mb-4" onClick={handleClickOpen}>Apply</Button>
+          </StyledCard>
+          <Button variant="success" className="d-block mx-auto mb-4" onClick={handleClickOpen}>Apply for a Loan</Button>
         </Col>
         <Col md={8}>
           <PartnersContainer>
-            {['Bank A', 'Bank B', 'Bank C', 'Bank D'].map((bank) => (
-              <PartnerCard key={bank}>
-                <Avatar>{bank[0]}</Avatar>
-                <PartnerText variant="body2">{bank}</PartnerText>
-              </PartnerCard>
-            ))}
+            <PartnerCard>
+              <Avatar>💡</Avatar>
+              <PartnerText variant="body2">Financial Tips</PartnerText>
+            </PartnerCard>
+            <PartnerCard>
+              <Avatar>📈</Avatar>
+              <PartnerText variant="body2">Featured Loan Offer</PartnerText>
+            </PartnerCard>
+            <PartnerCard>
+              <Avatar>👥</Avatar>
+              <PartnerText variant="body2">Customer Testimonials</PartnerText>
+            </PartnerCard>
           </PartnersContainer>
         </Col>
       </Row>
+
       <Row className="mt-4">
         <Col md={4}>
-          <AnalyticsCard>
+          <StyledCard>
             <Typography variant="h5" gutterBottom>Analytics</Typography>
             <Pie data={data} />
-          </AnalyticsCard>
+          </StyledCard>
         </Col>
         <Col md={4}>
-          <BankDetailsCard>
-            <Typography variant="h5" gutterBottom>Bank Details</Typography>
-            <Typography variant="body1">Account Number: 123456789</Typography>
-            <Typography variant="body1">Sort Code: 12-34-56</Typography>
-            <Typography variant="body1">Bank Name: Example Bank</Typography>
-          </BankDetailsCard>
+          <StyledCard>
+            <Typography variant="h5" gutterBottom>Featured Loan Offer</Typography>
+            <Typography variant="body1">Get our special offer with low interest rates and flexible terms. Apply now and take advantage of this limited-time offer!</Typography>
+            <Button variant="info" className="mt-3">Learn More</Button>
+          </StyledCard>
         </Col>
         <Col md={4}>
-          <LoanSummaryCard>
-            <Typography variant="h5" gutterBottom>Loan Summary</Typography>
-            <Typography variant="body1">Total Loan Amount: $10,000</Typography>
-            <Typography variant="body1">Remaining Balance: $5,000</Typography>
-            <Typography variant="body1">Next Payment Due: 2024-08-15</Typography>
-          </LoanSummaryCard>
+          <StyledCard>
+            <Typography variant="h5" gutterBottom>Customer Testimonials</Typography>
+            <Typography variant="body1">"Great service and support throughout the application process!" - Alex Smith</Typography>
+            <Typography variant="body1">"The application was straightforward and quick. Highly recommended!" - Jessica Lee</Typography>
+          </StyledCard>
         </Col>
       </Row>
 

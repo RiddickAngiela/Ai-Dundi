@@ -8,7 +8,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -20,6 +19,8 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import InvestIcon from '@mui/icons-material/AccountBalance';
 import FaqIcon from '@mui/icons-material/QuestionAnswer';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LogoutIcon from '@mui/icons-material/Logout'; // Import the Logout icon
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +35,12 @@ export default function Sidebar() {
 
   const navigateTo = (path) => {
     navigate(path);
+    setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    // Navigate to the Logout component or perform logout logic here
+    navigate('/logout');
     setIsOpen(false);
   };
 
@@ -65,6 +72,14 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
         ))}
+      </List>
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemIcon><LogoutIcon /></ListItemIcon>
+            <ListItemText primary="Log Out" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );

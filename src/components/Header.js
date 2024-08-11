@@ -1,9 +1,11 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Divider, IconButton, Typography } from '@mui/material';
+import { Container, Row, Col, Nav } from 'react-bootstrap';
+import { Divider, IconButton, Typography, Button } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AnchorTemporaryDrawer from './Sidebar';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext'; // Ensure the path is correct
 
 const Header = () => {
   const [state, setState] = React.useState({
@@ -12,6 +14,8 @@ const Header = () => {
     bottom: false,
     right: false,
   });
+
+  const { isAuthenticated } = useAuth(); // Get authentication status
 
   // Define the toggleDrawer function
   const toggleDrawer = (anchor, open) => (event) => {
@@ -26,24 +30,42 @@ const Header = () => {
       <Container fluid className="p-3 bg-dark text-light">
         <Row className="align-items-center">
           <Col xs="auto" className="d-flex align-items-center">
-            <Typography variant="h4" className="ml-2">Ai-Dundi</Typography> {/* Placing the name next to the logo */}
+            <Typography variant="h4" className="ml-2">Ai-Dundi</Typography>
           </Col>
-          <Col className="d-flex justify-content-end">
-            <IconButton className="text-light mx-2">
-              <NotificationsIcon />
-            </IconButton>
-            <IconButton className="text-light mx-2">
-              <AccountCircleIcon />
-            </IconButton>
+          <Col className="d-flex justify-content-end align-items-center">
+            {isAuthenticated ? (
+              <>
+                {/* Render hamburger menu and icons when authenticated */}
+                <IconButton className="text-light mx-2" onClick={toggleDrawer('left', true)}>
+                  <AccountCircleIcon />
+                </IconButton>
+                <IconButton className="text-light mx-2">
+                  <NotificationsIcon />
+                </IconButton>
+                <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
+              </>
+            ) : (
+              <Nav className="mr-auto">
+                {/* Render Login and Signup buttons when not authenticated */}
+                <Link to="/login">
+                  <Button variant="outlined" color="inherit" className="mx-2">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button variant="contained" color="primary" className="mx-2">
+                    Signup
+                  </Button>
+                </Link>
+              </Nav>
+            )}
           </Col>
         </Row>
-        {/* Ensure state and toggleDrawer are passed correctly */}
-        <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
+        <Divider />
       </Container>
-      <Divider />
     </>
   );
-}
+};
 
 export default Header;
 

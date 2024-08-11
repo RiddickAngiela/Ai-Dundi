@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, TextField, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
 import Stack from "react-bootstrap/Stack";
@@ -8,20 +8,54 @@ import Row from "react-bootstrap/Row";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
 import customTheme from "../components/theme";
+import axios from 'axios'; // Import axios
 import "./Signup.css";
 
 export const Signup = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLoginRedirect = () => {
     navigate("/login"); // Adjust this path if your routing structure is different
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Add your signup logic here (e.g., API call to register the user)
-    // If signup is successful, navigate to the Home page
-    navigate("/home");
+    
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    const userData = {
+      email,
+      password,
+      firstName: fullName.split(" ")[0], // Assumes first part of name is first name
+      lastName: fullName.split(" ")[1] || "" // Assumes second part of name is last name
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/users/register", userData, {
+         headers: {
+                'Content-Type': 'application/json', // Specify the content type
+                // Add any other headers you need here, e.g., Authorization
+                // 'Authorization': `Bearer ${token}`
+            }
+      });
+
+      if (response.status === 201) { // Assuming 201 status code for successful creation
+        navigate("/home");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      setError("Signup failed. Please try again.");
+    }
   };
 
   return (
@@ -42,6 +76,11 @@ export const Signup = () => {
                   <div>
                     <Typography variant="h3">Create Your Account</Typography>
                   </div>
+                  {error && (
+                    <Typography variant="h6" color="error">
+                      {error}
+                    </Typography>
+                  )}
                   <div className="pt-3 d-flex justify-content-center">
                     <Col lg={8}>
                       <TextField
@@ -49,6 +88,8 @@ export const Signup = () => {
                         className="auth_text_field"
                         type="text"
                         label="Full Name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
                         color="black"
                         fullWidth
                       />
@@ -61,6 +102,8 @@ export const Signup = () => {
                         className="auth_text_field"
                         type="email"
                         label="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         color="black"
                         fullWidth
                       />
@@ -73,6 +116,8 @@ export const Signup = () => {
                         className="auth_text_field"
                         type="password"
                         label="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         color="black"
                         fullWidth
                       />
@@ -85,6 +130,8 @@ export const Signup = () => {
                         className="auth_text_field"
                         type="password"
                         label="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         color="black"
                         fullWidth
                       />

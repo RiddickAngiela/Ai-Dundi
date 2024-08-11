@@ -1,21 +1,33 @@
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Box, Typography, AppBar, Toolbar, CssBaseline, Container, Paper } from '@mui/material';
-import ApplicationForm from './ApplicationForm';
-import EligibilityCheck from './EligibilityCheck';
-import LoanApproval from './LoanApproval';
+import { Box, Typography, AppBar, Toolbar, CssBaseline, Container, Paper } from '@mui/material';
 import Offers from './Offers';
+import EligibilityCheck from './EligibilityCheck';
+import ApplicationForm from './ApplicationForm';
+import LoanApproval from './LoanApproval';
 import Agreement from './Agreement';
 
 const Loan = () => {
-  const [isApplicationFormOpen, setApplicationFormOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const openApplicationForm = () => setApplicationFormOpen(true);
-  const closeApplicationForm = () => setApplicationFormOpen(false);
+  const handleNextStep = () => {
+    setCurrentStep((prevStep) => prevStep + 1);
+  };
 
-  const [currentView, setCurrentView] = useState(''); 
-
-  const handleViewChange = (view) => {
-    setCurrentView(view);
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <Offers onComplete={handleNextStep} />;
+      case 2:
+        return <EligibilityCheck onComplete={handleNextStep} />;
+      case 3:
+        return <ApplicationForm onComplete={handleNextStep} />;
+      case 4:
+        return <LoanApproval onComplete={handleNextStep} />;
+      case 5:
+        return <Agreement />;
+      default:
+        return <Typography variant="h6">All steps completed</Typography>;
+    }
   };
 
   return (
@@ -26,27 +38,16 @@ const Loan = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white' }}>
             Loan Services
           </Typography>
-          <ButtonGroup variant="text" aria-label="text button group">
-            <Button onClick={() => handleViewChange('eligibility-check')} color="inherit">Eligibility Check</Button>
-            <Button onClick={openApplicationForm} color="inherit">Application Form</Button>
-            <Button onClick={() => handleViewChange('loan-approval')} color="inherit">Loan Approval</Button>
-            <Button onClick={() => handleViewChange('offers')} color="inherit">Offers</Button>
-            <Button onClick={() => handleViewChange('agreement')} color="inherit">Agreement</Button>
-          </ButtonGroup>
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg" sx={{ p: 3 }}>
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-          {currentView === 'eligibility-check' && <EligibilityCheck />}
-          {currentView === 'application-form' && <ApplicationForm open={false} handleClose={() => {}} />}
-          {currentView === 'loan-approval' && <LoanApproval />}
-          {currentView === 'offers' && <Offers />}
-          {currentView === 'agreement' && <Agreement />}
+          {renderStep()}
         </Paper>
       </Container>
-      <ApplicationForm open={isApplicationFormOpen} handleClose={closeApplicationForm} />
     </Box>
   );
 };
 
 export default Loan;
+

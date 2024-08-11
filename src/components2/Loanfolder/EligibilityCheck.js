@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import axios from 'axios';
+import { Container, Typography, TextField, Button, Grid, Paper } from '@mui/material';
+import ApplicationForm from './ApplicationForm';
+import { useNavigate } from 'react-router-dom';
 
 const EligibilityCheck = () => {
   const [formData, setFormData] = useState({
@@ -7,132 +10,178 @@ const EligibilityCheck = () => {
     lastName: '',
     idNumber: '',
     age: '',
-    bankStatements: '',
+    bankStatements: null,
     employmentStatus: '',
     workId: '',
     nextOfKin: '',
     accountNumber: '',
+    dateOfBirth: '',
+    gender: ''
   });
+  const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'file' ? files[0] : value
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== '') {
+        data.append(key, value);
+      }
+    });
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/eligibility-check', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      console.log('Server response:', response.data);
+      setOpenDialog(true);
+    } catch (error) {
+      console.error('Error submitting the form:', error);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate('/loan-approval', { state: { eligibilityData: formData } });
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Eligibility Check
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="First Name"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Last Name"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="ID Number"
-              name="idNumber"
-              value={formData.idNumber}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Age"
-              name="age"
-              type="number"
-              value={formData.age}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Bank Statements"
-              name="bankStatements"
-              type="file"
-              onChange={(e) => setFormData({ ...formData, bankStatements: e.target.files[0] })}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth required>
-              <InputLabel>Employment Status</InputLabel>
-              <Select
+    <Container className="my-4">
+      <Paper elevation={3} style={{ padding: '16px', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
+        <Typography variant="h4" gutterBottom className="text-center mb-4">
+          Eligibility Check
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="First Name"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="ID Number"
+                name="idNumber"
+                value={formData.idNumber}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Age"
+                name="age"
+                type="number"
+                value={formData.age}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Bank Statements"
+                name="bankStatements"
+                type="file"
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Employment Status"
                 name="employmentStatus"
                 value={formData.employmentStatus}
                 onChange={handleChange}
-              >
-                <MenuItem value="employed">Employed</MenuItem>
-                <MenuItem value="self-employed">Self-Employed</MenuItem>
-                <MenuItem value="unemployed">Unemployed</MenuItem>
-              </Select>
-            </FormControl>
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Work ID"
+                name="workId"
+                value={formData.workId}
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Next of Kin"
+                name="nextOfKin"
+                value={formData.nextOfKin}
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Account Number"
+                name="accountNumber"
+                value={formData.accountNumber}
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Date of Birth"
+                name="dateOfBirth"
+                type="date"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} className="text-center">
+              <Button type="submit" variant="contained" color="primary" className="mt-3">
+                Submit
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Work ID"
-              name="workId"
-              value={formData.workId}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Next of Kin"
-              name="nextOfKin"
-              value={formData.nextOfKin}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Account Number"
-              name="accountNumber"
-              value={formData.accountNumber}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Paper>
+
+      <ApplicationForm
+        open={openDialog}
+        handleClose={handleCloseDialog}
+      />
     </Container>
   );
 };
