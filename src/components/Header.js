@@ -15,7 +15,7 @@ const Header = () => {
     right: false,
   });
 
-  const { isAuthenticated } = useAuth(); // Get authentication status
+  const { isAuthenticated } = useAuth(); // Get authentication status and logout function
 
   // Define the toggleDrawer function
   const toggleDrawer = (anchor, open) => (event) => {
@@ -26,44 +26,44 @@ const Header = () => {
   };
 
   return (
-    <>
-      <Container fluid className="p-3 bg-dark text-light">
-        <Row className="align-items-center">
-          <Col xs="auto" className="d-flex align-items-center">
-            <Typography variant="h4" className="ml-2">Ai-Dundi</Typography>
-          </Col>
-          <Col className="d-flex justify-content-end align-items-center">
-            {isAuthenticated ? (
-              <>
-                {/* Render hamburger menu and icons when authenticated */}
-                <IconButton className="text-light mx-2" onClick={toggleDrawer('left', true)}>
+    <Container fluid className="p-3 bg-dark text-light">
+      <Row className="align-items-center">
+        <Col xs="auto" className="d-flex align-items-center">
+          <Typography variant="h4" className="ml-2">Ai-Dundi</Typography>
+        </Col>
+        <Col className="d-flex justify-content-end align-items-center">
+          {isAuthenticated ? (
+            <>
+              {/* Render hamburger menu and icons when authenticated */}
+              <Link to="/account">
+                <IconButton className="text-light mx-2">
                   <AccountCircleIcon />
                 </IconButton>
-                <IconButton className="text-light mx-2">
-                  <NotificationsIcon />
-                </IconButton>
-                <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
-              </>
-            ) : (
-              <Nav className="mr-auto">
-                {/* Render Login and Signup buttons when not authenticated */}
-                <Link to="/login">
-                  <Button variant="outlined" color="inherit" className="mx-2">
-                    Login
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button variant="contained" color="primary" className="mx-2">
-                    Signup
-                  </Button>
-                </Link>
-              </Nav>
-            )}
-          </Col>
-        </Row>
-        <Divider />
-      </Container>
-    </>
+              </Link>
+              <IconButton className="text-light mx-2">
+                <NotificationsIcon />
+              </IconButton>
+              <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
+            </>
+          ) : (
+            <Nav className="mr-auto">
+              {/* Render Login and Signup buttons when not authenticated */}
+              <Link to="/login">
+                <Button variant="outlined" color="inherit" className="mx-2">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="contained" color="primary" className="mx-2">
+                  Signup
+                </Button>
+              </Link>
+            </Nav>
+          )}
+        </Col>
+      </Row>
+      <Divider />
+    </Container>
   );
 };
 

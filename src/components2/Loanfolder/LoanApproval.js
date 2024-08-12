@@ -16,7 +16,7 @@ const LoanApproval = () => {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>Eligibility Check Details</Typography>
+              <Typography variant="h6" gutterBottom></Typography>
               {eligibilityData ? (
                 <div>
                   <Typography><strong>First Name:</strong> {eligibilityData.firstName}</Typography>

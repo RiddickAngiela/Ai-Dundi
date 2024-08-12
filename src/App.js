@@ -23,6 +23,8 @@ import FAQ from './components2/FAQ';
 import Trash from './components2/Trash';
 import EligibilityCheck from './components2/Loanfolder/EligibilityCheck'; // Corrected import
 import LoanApproval from './components2/Loanfolder/LoanApproval';
+import Account from './components/Account';
+import PrivateRoute from './components/PrivateRoute';
 
 import { TrashProvider } from './contexts/TrashContext';
 
@@ -43,22 +45,23 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/account" element={<PrivateRoute element={<Account />} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/home" element={<Home />} />
-              <Route path="/loan" element={<Loan />} />
-              <Route path="/payment-process" element={<PaymentProcess />} />
-              <Route path="/dic" element={<DIC />} />
-              <Route path="/customer-support" element={<CustomerSupport />} />
-              <Route path="/security-compliance" element={<SecurityCompliance />} />
-              <Route path="/analytic-report" element={<AnalyticReport />} />
-              <Route path="/marketing-promotions" element={<MarketingPromotions />} />
-              <Route path="/investment" element={<Investment />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/trash" element={<Trash />} />
-              <Route path="/eligibility-check" element={<EligibilityCheck />} /> {/* Added Eligibility Check */}
-              <Route path="/loan-approval" element={<LoanApproval />} />
-              <Route path="/logout" element={<Logout />} /> {/* Added Logout route */}
+              <Route path="/loan" element={<PrivateRoute element={<Loan />} />} />
+              <Route path="/payment-process" element={<PrivateRoute element={<PaymentProcess />} />} />
+              <Route path="/dic" element={<PrivateRoute element={<DIC />} />} />
+              <Route path="/customer-support" element={<PrivateRoute element={<CustomerSupport />} />} />
+              <Route path="/security-compliance" element={<PrivateRoute element={<SecurityCompliance />} />} />
+              <Route path="/analytic-report" element={<PrivateRoute element={<AnalyticReport />} />} />
+              <Route path="/marketing-promotions" element={<PrivateRoute element={<MarketingPromotions />} />} />
+              <Route path="/investment" element={<PrivateRoute element={<Investment />} />} />
+              <Route path="/faq" element={<PrivateRoute element={<FAQ />} />} />
+              <Route path="/trash" element={<PrivateRoute element={<Trash />} />} />
+              <Route path="/eligibility-check" element={<PrivateRoute element={<EligibilityCheck />} />} />
+              <Route path="/loan-approval" element={<PrivateRoute element={<LoanApproval />} />} />
+              <Route path="/logout" element={<Logout />} />
             </Routes>
             <Footer />
           </Container>

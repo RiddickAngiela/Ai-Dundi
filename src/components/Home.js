@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Container, Row, Col, Form } from 'react-bootstrap';
+import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-import ApplicationForm from '../components2/Loanfolder/ApplicationForm'; // Import the ApplicationForm component
+import { FaArrowUp } from 'react-icons/fa';
+import ApplicationForm from '../components2/Loanfolder/ApplicationForm';
 
-// Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
+// Styled components
 const WelcomeMessage = styled('div')(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(2),
@@ -19,7 +20,7 @@ const WelcomeMessage = styled('div')(({ theme }) => ({
   textAlign: 'center',
 }));
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled('div')(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(4),
   marginBottom: theme.spacing(4),
@@ -37,7 +38,7 @@ const PartnersContainer = styled('div')(({ theme }) => ({
   marginTop: theme.spacing(4),
 }));
 
-const PartnerCard = styled(Card)(({ theme }) => ({
+const PartnerCard = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -68,7 +69,7 @@ const ReviewList = styled('div')(({ theme }) => ({
   marginTop: theme.spacing(4),
 }));
 
-const ReviewItem = styled(Card)(({ theme }) => ({
+const ReviewItem = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   marginBottom: theme.spacing(2),
   backgroundColor: '#fff',
@@ -81,21 +82,32 @@ const SendButton = styled(Button)(({ theme }) => ({
   right: theme.spacing(1),
   bottom: theme.spacing(1),
   padding: theme.spacing(1),
+  backgroundColor: '#007bff',
+  color: '#fff',
+  border: 'none',
+  '&:hover': {
+    backgroundColor: '#0056b3',
+  },
 }));
 
 const Home = () => {
-  // State for dialog
   const [open, setOpen] = useState(false);
-  const [reviewData, setReviewData] = useState({
-    username: '',
-    image: '',
-    review: '',
-    rating: 1,
-  });
+  const [reviewData, setReviewData] = useState({ review: '', rating: 1 });
   const [reviews, setReviews] = useState([]);
+  const [userProfile, setUserProfile] = useState({ username: '', image: '' });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Fetch existing reviews from backend
+    // Fetch user profile data and login status
+    fetch('http://localhost:3000/api/users/profile')
+      .then((response) => response.json())
+      .then((data) => {
+        setUserProfile({ username: data.username, image: data.image });
+        setIsLoggedIn(data.isLoggedIn);
+      })
+      .catch((error) => console.error('Error fetching user profile:', error));
+
+    // Fetch reviews
     fetch('http://localhost:3000/api/reviews')
       .then((response) => response.json())
       .then((data) => setReviews(data))
@@ -111,43 +123,45 @@ const Home = () => {
   };
 
   const handleReviewChange = (e) => {
-    const { name, value } = e.target;
-    setReviewData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setReviewData((prev) => ({ ...prev, review: e.target.value }));
   };
 
   const handleRatingChange = (e) => {
-    setReviewData((prev) => ({
-      ...prev,
-      rating: Number(e.target.value),
-    }));
+    setReviewData((prev) => ({ ...prev, rating: Number(e.target.value) }));
   };
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    const { username, image, review, rating } = reviewData;
 
-    if (username && review.trim()) {
+    if (!isLoggedIn) {
+      alert('You must be logged in to submit a review.');
+      return;
+    }
+
+    if (reviewData.review.trim()) {
       fetch('http://localhost:3000/api/reviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, image, review, rating }),
+        body: JSON.stringify({
+          username: userProfile.username,
+          image: userProfile.image,
+          review: reviewData.review,
+          rating: reviewData.rating,
+        }),
       })
         .then((response) => response.json())
         .then((newReview) => {
+          console.log('New review:', newReview); // Log the new review for debugging
           setReviews((prev) => [newReview, ...prev]);
-          setReviewData({ username: '', image: '', review: '', rating: 1 });
+          setReviewData({ review: '', rating: 1 });
         })
         .catch((error) => console.error('Error creating review:', error));
     }
   };
 
-  // Sample data for the pie chart
-  const data = {
+  const pieData = {
     labels: ['Income', 'Expenses', 'Savings'],
     datasets: [{
       data: [3000, 1500, 2000],
@@ -199,7 +213,7 @@ const Home = () => {
         <Col md={4}>
           <StyledCard>
             <Typography variant="h5" gutterBottom>Analytics</Typography>
-            <Pie data={data} />
+            <Pie data={pieData} />
           </StyledCard>
         </Col>
         <Col md={4}>
@@ -221,24 +235,6 @@ const Home = () => {
       {/* Review Input Form */}
       <ReviewFormContainer>
         <Form onSubmit={handleReviewSubmit}>
-          <Form.Group controlId="username">
-            <Form.Control
-              type="text"
-              name="username"
-              value={reviewData.username}
-              onChange={handleReviewChange}
-              placeholder="Username"
-            />
-          </Form.Group>
-          <Form.Group controlId="image">
-            <Form.Control
-              type="text"
-              name="image"
-              value={reviewData.image}
-              onChange={handleReviewChange}
-              placeholder="Image URL (optional)"
-            />
-          </Form.Group>
           <Form.Group controlId="review">
             <Form.Control
               as="textarea"
@@ -246,51 +242,45 @@ const Home = () => {
               name="review"
               value={reviewData.review}
               onChange={handleReviewChange}
-              placeholder="Share your feedback..."
-              style={{ resize: 'none' }}
+              placeholder="Write your review here..."
             />
           </Form.Group>
-          <Form.Group controlId="rating">
-            <Form.Label>Rating</Form.Label>
+          <Form.Group controlId="rating" className="mt-3">
             <Form.Control
               as="select"
               name="rating"
               value={reviewData.rating}
               onChange={handleRatingChange}
             >
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <option key={rating} value={rating}>{rating}</option>
-              ))}
+              <option value={1}>1 Star</option>
+              <option value={2}>2 Stars</option>
+              <option value={3}>3 Stars</option>
+              <option value={4}>4 Stars</option>
+              <option value={5}>5 Stars</option>
             </Form.Control>
           </Form.Group>
-          <SendButton
-            variant="outline-primary"
-            type="submit"
-            title="Send"
-          >
-            <Typography variant="body1">→</Typography>
+          <SendButton type="submit">
+            <FaArrowUp />
           </SendButton>
         </Form>
       </ReviewFormContainer>
 
-      {/* Display Reviews */}
+      {/* Review List */}
       <ReviewList>
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
-            <ReviewItem key={review.id}>
-              <Typography variant="h6">{review.username}</Typography>
-              {review.image && <Avatar src={review.image} />}
-              <Typography variant="body1">{review.review}</Typography>
-              <Typography variant="body2">Rating: {review.rating}</Typography>
-              <Typography variant="body2">{new Date(review.createdAt).toLocaleDateString()}</Typography>
-            </ReviewItem>
-          ))
-        ) : (
-          <Typography variant="body1">No reviews yet. Be the first to leave a review!</Typography>
-        )}
+        {reviews.map((review, index) => (
+          <ReviewItem key={index}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar src={review.image} alt={review.username} />
+              <div style={{ marginLeft: '10px' }}>
+                <Typography variant="body2">{review.username}</Typography>
+                <Typography variant="body2">{'⭐'.repeat(review.rating)}</Typography>
+                <Typography variant="body1">{review.review}</Typography>
+              </div>
+            </div>
+          </ReviewItem>
+        ))}
       </ReviewList>
 
-      {/* Loan Application Dialog */}
       <ApplicationForm open={open} handleClose={handleClose} />
     </Container>
   );
