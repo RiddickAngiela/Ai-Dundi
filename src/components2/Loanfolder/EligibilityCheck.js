@@ -31,12 +31,19 @@ const EligibilityCheck = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== '') {
         data.append(key, value);
       }
     });
+
+    // Log FormData entries for debugging
+    console.log('FormData entries:');
+    for (let pair of data.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
 
     try {
       const response = await axios.post('http://localhost:3000/api/eligibility-check', data, {
@@ -45,7 +52,7 @@ const EligibilityCheck = () => {
       console.log('Server response:', response.data);
       setOpenDialog(true);
     } catch (error) {
-      console.error('Error submitting the form:', error);
+      console.error('Error submitting the form:', error.response ? error.response.data : error.message);
     }
   };
 

@@ -75,7 +75,7 @@ const AnalyticReport = () => {
         <Grid item xs={12} md={4}>
           <Paper elevation={3} style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>
-              Expenses Bar Chart
+              Withdrawal Bar Chart
             </Typography>
             <div style={{ width: '100%', height: '300px' }}>
               <Bar data={barData} options={{ responsive: true }} />

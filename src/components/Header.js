@@ -3,6 +3,7 @@ import { Container, Row, Col, Nav } from 'react-bootstrap';
 import { Divider, IconButton, Typography, Button } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Professional icon for approval
 import AnchorTemporaryDrawer from './Sidebar';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // Ensure the path is correct
@@ -35,6 +36,11 @@ const Header = () => {
           {isAuthenticated ? (
             <>
               {/* Render hamburger menu and icons when authenticated */}
+              <Link to="/loan-approval">
+                <IconButton className="text-light mx-2">
+                  <CheckCircleIcon />
+                </IconButton>
+              </Link>
               <Link to="/account">
                 <IconButton className="text-light mx-2">
                   <AccountCircleIcon />

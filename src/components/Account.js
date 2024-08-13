@@ -1,37 +1,34 @@
-import React from 'react';
-import { Container, Card, Avatar, Typography, Divider } from '@mui/material';
-
-// Hardcoded user data for demonstration
-const user = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  bio: 'Lorem ipsum dolor sit amet...',
-  profileImage: 'https://via.placeholder.com/150'
-};
+// src/components/Account.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Account = () => {
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/profile'); // Use the correct API endpoint
+        setUser(response.data);
+      } catch (err) {
+        setError('Failed to fetch user details');
+        console.error(err);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  if (error) return <div>{error}</div>;
+  if (!user) return <div>Loading...</div>;
+
   return (
-    <Container>
-      <Card sx={{ maxWidth: 600, margin: 'auto', padding: 3 }}>
-        <div style={{ textAlign: 'center' }}>
-          <Avatar 
-            src={user.profileImage} 
-            alt={user.name} 
-            sx={{ width: 100, height: 100, margin: 'auto' }}
-          />
-          <Typography variant="h4" component="h1" gutterBottom>
-            {user.name}
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            {user.email}
-          </Typography>
-          <Divider sx={{ my: 2 }} />
-          <Typography variant="body2" color="textSecondary">
-            {user.bio}
-          </Typography>
-        </div>
-      </Card>
-    </Container>
+    <div>
+      <h1>Account Details</h1>
+      <p><strong>Full Name:</strong> {user.firstName} {user.lastName}</p>
+      <p><strong>Email:</strong> {user.email}</p>
+    </div>
   );
 };
 

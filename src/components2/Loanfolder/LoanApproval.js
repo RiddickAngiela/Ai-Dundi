@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Card, CardContent, Grid } from '@mui/material';
+import { Container, Typography, Card, CardContent, Grid, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 
 const LoanApproval = () => {
@@ -62,6 +62,21 @@ const LoanApproval = () => {
           </Grid>
         </CardContent>
       </Card>
+      {applicationData && (
+        <Button
+          variant="contained"
+          color="success"
+          style={{
+            position: 'fixed',
+            bottom: '16px',
+            right: '16px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+          }}
+        >
+          Loan Pending
+        </Button>
+      )}
     </Container>
   );
 };

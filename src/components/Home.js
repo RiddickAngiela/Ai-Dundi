@@ -3,111 +3,95 @@ import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
+import { Rating } from '@mui/material';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-import { FaArrowUp } from 'react-icons/fa';
 import ApplicationForm from '../components2/Loanfolder/ApplicationForm';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
 // Styled components
-const WelcomeMessage = styled('div')(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  backgroundColor: '#f5f5f5',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  textAlign: 'center',
+const MainContainer = styled(Container)(({ theme }) => ({
+  backgroundColor: '#f4f4f9',
+  padding: theme.spacing(5),
+  minHeight: '100vh',
 }));
 
-const StyledCard = styled('div')(({ theme }) => ({
+const HeaderSection = styled('header')(({ theme }) => ({
   textAlign: 'center',
+  marginBottom: theme.spacing(5),
+}));
+
+const HeroSection = styled('section')(({ theme }) => ({
+  backgroundColor: '#ffffff',
+  color: '#333',
+  padding: theme.spacing(5),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[4],
+  textAlign: 'center',
+  marginBottom: theme.spacing(5),
+}));
+
+const CardGrid = styled(Row)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  gap: theme.spacing(4),
+}));
+
+const Card = styled(Col)(({ theme }) => ({
+  backgroundColor: '#ffffff',
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[2],
+  padding: theme.spacing(3),
+  textAlign: 'center',
+  height: '100%',
+}));
+
+const ChartCard = styled(Card)(({ theme }) => ({
+  height: '350px',
+}));
+
+const ReviewSection = styled('section')(({ theme }) => ({
+  marginTop: theme.spacing(4),
   padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-  backgroundColor: '#fff',
+  backgroundColor: '#ffffff',
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[5],
-  border: '1px solid #e0e0e0',
-}));
-
-const PartnersContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  flexWrap: 'wrap',
-  gap: theme.spacing(3),
-  marginTop: theme.spacing(4),
-}));
-
-const PartnerCard = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: theme.spacing(14),
-  height: theme.spacing(14),
-  borderRadius: '50%',
-  boxShadow: theme.shadows[3],
-  padding: theme.spacing(2),
-  backgroundColor: '#fff',
-  border: '1px solid #e0e0e0',
-  textAlign: 'center',
-}));
-
-const PartnerText = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-}));
-
-const ReviewFormContainer = styled('div')(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  backgroundColor: '#f5f5f5',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  position: 'relative',
-}));
-
-const ReviewList = styled('div')(({ theme }) => ({
-  marginTop: theme.spacing(4),
+  boxShadow: theme.shadows[2],
 }));
 
 const ReviewItem = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
   padding: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  backgroundColor: '#fff',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[1],
+  borderBottom: '1px solid #eeeeee',
 }));
 
-const SendButton = styled(Button)(({ theme }) => ({
-  position: 'absolute',
-  right: theme.spacing(1),
-  bottom: theme.spacing(1),
-  padding: theme.spacing(1),
+const ReviewAvatar = styled(Avatar)(({ theme }) => ({
+  marginRight: theme.spacing(2),
+  width: theme.spacing(7),
+  height: theme.spacing(7),
+}));
+
+const ReviewForm = styled(Form)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+}));
+
+const ReviewButton = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(2),
   backgroundColor: '#007bff',
-  color: '#fff',
-  border: 'none',
+  color: '#ffffff',
+  borderColor: '#007bff',
   '&:hover': {
     backgroundColor: '#0056b3',
+    borderColor: '#0056b3',
   },
 }));
 
 const Home = () => {
   const [open, setOpen] = useState(false);
-  const [reviewData, setReviewData] = useState({ review: '', rating: 1 });
+  const [reviewData, setReviewData] = useState({ review: '', rating: 1, username: '', image: '' });
   const [reviews, setReviews] = useState([]);
-  const [userProfile, setUserProfile] = useState({ username: '', image: '' });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Fetch user profile data and login status
-    fetch('http://localhost:3000/api/users/profile')
-      .then((response) => response.json())
-      .then((data) => {
-        setUserProfile({ username: data.username, image: data.image });
-        setIsLoggedIn(data.isLoggedIn);
-      })
-      .catch((error) => console.error('Error fetching user profile:', error));
-
-    // Fetch reviews
     fetch('http://localhost:3000/api/reviews')
       .then((response) => response.json())
       .then((data) => setReviews(data))
@@ -122,21 +106,13 @@ const Home = () => {
     setOpen(false);
   };
 
-  const handleReviewChange = (e) => {
-    setReviewData((prev) => ({ ...prev, review: e.target.value }));
-  };
-
-  const handleRatingChange = (e) => {
-    setReviewData((prev) => ({ ...prev, rating: Number(e.target.value) }));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setReviewData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-
-    if (!isLoggedIn) {
-      alert('You must be logged in to submit a review.');
-      return;
-    }
 
     if (reviewData.review.trim()) {
       fetch('http://localhost:3000/api/reviews', {
@@ -145,17 +121,16 @@ const Home = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: userProfile.username,
-          image: userProfile.image,
+          username: reviewData.username,
+          image: reviewData.image,
           review: reviewData.review,
           rating: reviewData.rating,
         }),
       })
         .then((response) => response.json())
         .then((newReview) => {
-          console.log('New review:', newReview); // Log the new review for debugging
           setReviews((prev) => [newReview, ...prev]);
-          setReviewData({ review: '', rating: 1 });
+          setReviewData({ review: '', rating: 1, username: '', image: '' });
         })
         .catch((error) => console.error('Error creating review:', error));
     }
@@ -170,119 +145,100 @@ const Home = () => {
   };
 
   return (
-    <Container>
-      <WelcomeMessage>
-        <Typography variant="h4">Welcome to Your Financial Future!</Typography>
-        <Typography variant="body1">Explore our loan options and take control of your finances today.</Typography>
-      </WelcomeMessage>
+    <MainContainer>
+      <HeaderSection>
+        <Typography variant="h2" gutterBottom>
+          Welcome to Your Financial Future
+        </Typography>
+        <Typography variant="h6" color="textSecondary">
+          Explore our financial products and take control of your finances with ease.
+        </Typography>
+      </HeaderSection>
 
-      <Row className="mt-5">
-        <Col md={4} className="mb-4">
-          <StyledCard>
-            <Typography variant="h5">Balance: $0.00</Typography>
-            <Row className="mt-4">
-              <Col>
-                <Button variant="primary">Deposit</Button>
-              </Col>
-              <Col>
-                <Button variant="secondary">Withdrawal</Button>
-              </Col>
-            </Row>
-          </StyledCard>
-          <Button variant="success" className="d-block mx-auto mb-4" onClick={handleClickOpen}>Apply for a Loan</Button>
-        </Col>
-        <Col md={8}>
-          <PartnersContainer>
-            <PartnerCard>
-              <Avatar>💡</Avatar>
-              <PartnerText variant="body2">Financial Tips</PartnerText>
-            </PartnerCard>
-            <PartnerCard>
-              <Avatar>📈</Avatar>
-              <PartnerText variant="body2">Featured Loan Offer</PartnerText>
-            </PartnerCard>
-            <PartnerCard>
-              <Avatar>👥</Avatar>
-              <PartnerText variant="body2">Customer Testimonials</PartnerText>
-            </PartnerCard>
-          </PartnersContainer>
-        </Col>
-      </Row>
+      <HeroSection>
+        <Typography variant="h4" gutterBottom>
+          Special Offer: Low Interest Rates
+        </Typography>
+        <Button variant="primary" onClick={handleClickOpen}>Apply Now</Button>
+      </HeroSection>
 
-      <Row className="mt-4">
-        <Col md={4}>
-          <StyledCard>
-            <Typography variant="h5" gutterBottom>Analytics</Typography>
-            <Pie data={pieData} />
-          </StyledCard>
-        </Col>
-        <Col md={4}>
-          <StyledCard>
-            <Typography variant="h5" gutterBottom>Featured Loan Offer</Typography>
-            <Typography variant="body1">Get our special offer with low interest rates and flexible terms. Apply now and take advantage of this limited-time offer!</Typography>
-            <Button variant="info" className="mt-3">Learn More</Button>
-          </StyledCard>
-        </Col>
-        <Col md={4}>
-          <StyledCard>
-            <Typography variant="h5" gutterBottom>Customer Testimonials</Typography>
-            <Typography variant="body1">"Great service and support throughout the application process!" - Alex Smith</Typography>
-            <Typography variant="body1">"The application was straightforward and quick. Highly recommended!" - Jessica Lee</Typography>
-          </StyledCard>
-        </Col>
-      </Row>
+      <CardGrid>
+        <Card xs={12} md={4}>
+          <Typography variant="h6">Account Balance</Typography>
+          <Typography variant="h4">$0.00</Typography>
+          <Button variant="outline-primary" className="mt-2">Deposit</Button>
+          <Button variant="outline-secondary" className="mt-2 ml-2">Withdraw</Button>
+        </Card>
+        <ChartCard xs={12} md={8}>
+          <Typography variant="h6">Financial Overview</Typography>
+          <Pie data={pieData} />
+        </ChartCard>
+        <Card xs={12} md={4}>
+          <Typography variant="h6">Loan Offer</Typography>
+          <Typography variant="body1">Take advantage of our special loan offer with flexible terms.</Typography>
+          <Button variant="outline-info" className="mt-2">Learn More</Button>
+        </Card>
+      </CardGrid>
 
-      {/* Review Input Form */}
-      <ReviewFormContainer>
-        <Form onSubmit={handleReviewSubmit}>
+      <ReviewSection>
+        <Typography variant="h5" gutterBottom>
+          Share Your Experience
+        </Typography>
+        <ReviewForm onSubmit={handleReviewSubmit}>
+          <Form.Group controlId="username">
+            <Form.Control
+              type="text"
+              name="username"
+              value={reviewData.username}
+              onChange={handleInputChange}
+              placeholder="Your Name"
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="image">
+            <Form.Control
+              type="text"
+              name="image"
+              value={reviewData.image}
+              onChange={handleInputChange}
+              placeholder="Image URL (optional)"
+            />
+          </Form.Group>
+          <Form.Group controlId="rating">
+            <Rating
+              name="rating"
+              value={parseInt(reviewData.rating)}
+              onChange={(event, newValue) => setReviewData((prev) => ({ ...prev, rating: newValue }))}
+              precision={0.5}
+            />
+          </Form.Group>
           <Form.Group controlId="review">
             <Form.Control
               as="textarea"
-              rows={2}
+              rows={3}
               name="review"
               value={reviewData.review}
-              onChange={handleReviewChange}
-              placeholder="Write your review here..."
+              onChange={handleInputChange}
+              placeholder="Your Review"
+              required
             />
           </Form.Group>
-          <Form.Group controlId="rating" className="mt-3">
-            <Form.Control
-              as="select"
-              name="rating"
-              value={reviewData.rating}
-              onChange={handleRatingChange}
-            >
-              <option value={1}>1 Star</option>
-              <option value={2}>2 Stars</option>
-              <option value={3}>3 Stars</option>
-              <option value={4}>4 Stars</option>
-              <option value={5}>5 Stars</option>
-            </Form.Control>
-          </Form.Group>
-          <SendButton type="submit">
-            <FaArrowUp />
-          </SendButton>
-        </Form>
-      </ReviewFormContainer>
-
-      {/* Review List */}
-      <ReviewList>
-        {reviews.map((review, index) => (
-          <ReviewItem key={index}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar src={review.image} alt={review.username} />
-              <div style={{ marginLeft: '10px' }}>
-                <Typography variant="body2">{review.username}</Typography>
-                <Typography variant="body2">{'⭐'.repeat(review.rating)}</Typography>
-                <Typography variant="body1">{review.review}</Typography>
-              </div>
+          <ReviewButton type="submit">Submit Review</ReviewButton>
+        </ReviewForm>
+        {reviews.map((review) => (
+          <ReviewItem key={review.id}>
+            <ReviewAvatar src={review.image || '/default-avatar.png'} />
+            <div>
+              <Typography variant="h6">{review.username}</Typography>
+              <Rating value={review.rating} readOnly />
+              <Typography variant="body1">{review.review}</Typography>
             </div>
           </ReviewItem>
         ))}
-      </ReviewList>
+      </ReviewSection>
 
       <ApplicationForm open={open} handleClose={handleClose} />
-    </Container>
+    </MainContainer>
   );
 };
 
