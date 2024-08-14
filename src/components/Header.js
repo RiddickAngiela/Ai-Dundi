@@ -27,26 +27,28 @@ const Header = () => {
   };
 
   return (
-    <Container fluid className="p-3 bg-dark text-light">
+    <Container fluid className="p-3" style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #eeeeee' }}>
       <Row className="align-items-center">
         <Col xs="auto" className="d-flex align-items-center">
-          <Typography variant="h4" className="ml-2">Ai-Dundi</Typography>
+          <Typography variant="h4" className="ml-2" style={{ color: '#000000' }}>Ai-Dundi</Typography>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
           {isAuthenticated ? (
             <>
               {/* Render hamburger menu and icons when authenticated */}
               <Link to="/loan-approval">
-                <IconButton className="text-light mx-2">
+                <IconButton className="text-dark mx-2">
                   <CheckCircleIcon />
                 </IconButton>
               </Link>
-              <Link to="/account">
-                <IconButton className="text-light mx-2">
+                <IconButton className="text-dark mx-2">
+                               <Link to="/account">
+
                   <AccountCircleIcon />
+                                </Link>
+
                 </IconButton>
-              </Link>
-              <IconButton className="text-light mx-2">
+              <IconButton className="text-dark mx-2">
                 <NotificationsIcon />
               </IconButton>
               <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
@@ -55,12 +57,12 @@ const Header = () => {
             <Nav className="mr-auto">
               {/* Render Login and Signup buttons when not authenticated */}
               <Link to="/login">
-                <Button variant="outlined" color="inherit" className="mx-2">
+                <Button variant="outlined" className="mx-2" style={{ borderColor: '#000000', color: '#000000' }}>
                   Login
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button variant="contained" color="primary" className="mx-2">
+                <Button variant="contained" className="mx-2" style={{ backgroundColor: '#007bff', color: '#ffffff' }}>
                   Signup
                 </Button>
               </Link>
@@ -68,7 +70,7 @@ const Header = () => {
           )}
         </Col>
       </Row>
-      <Divider />
+      <Divider style={{ backgroundColor: '#eeeeee' }} />
     </Container>
   );
 };

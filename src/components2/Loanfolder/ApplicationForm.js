@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ApplicationForm = ({ open, handleClose }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const ApplicationForm = ({ open, handleClose }) => {
     repaymentTerm: ''
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Hook to navigate between pages
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -33,6 +35,7 @@ const ApplicationForm = ({ open, handleClose }) => {
       setLoading(false);
       alert("Loan application submitted successfully!");
       handleClose(); // Close dialog
+      navigate('/agreement', { state: { applicationData: formData } }); // Route to Agreement page with formData
     } catch (error) {
       setLoading(false);
       console.error("Error submitting loan application:", error);
@@ -46,81 +49,69 @@ const ApplicationForm = ({ open, handleClose }) => {
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <TextField
-            autoFocus
-            margin="dense"
             id="fullName"
             label="Full Name"
-            type="text"
-            fullWidth
             variant="outlined"
-            className="mb-3"
+            fullWidth
+            margin="normal"
             value={formData.fullName}
             onChange={handleChange}
           />
           <TextField
-            margin="dense"
             id="dob"
             label="Date of Birth"
             type="date"
-            fullWidth
             variant="outlined"
+            fullWidth
+            margin="normal"
             InputLabelProps={{ shrink: true }}
-            className="mb-3"
             value={formData.dob}
             onChange={handleChange}
           />
           <TextField
-            margin="dense"
             id="address"
             label="Address"
-            type="text"
-            fullWidth
             variant="outlined"
-            className="mb-3"
+            fullWidth
+            margin="normal"
             value={formData.address}
             onChange={handleChange}
           />
           <TextField
-            margin="dense"
             id="annualIncome"
             label="Annual Income"
             type="number"
-            fullWidth
             variant="outlined"
-            className="mb-3"
+            fullWidth
+            margin="normal"
             value={formData.annualIncome}
             onChange={handleChange}
           />
           <TextField
-            margin="dense"
             id="loanAmount"
             label="Loan Amount"
             type="number"
-            fullWidth
             variant="outlined"
-            className="mb-3"
+            fullWidth
+            margin="normal"
             value={formData.loanAmount}
             onChange={handleChange}
           />
           <TextField
-            margin="dense"
             id="loanPurpose"
-            label="Loan Purpose"
-            type="text"
-            fullWidth
+            label="Purpose of Loan"
             variant="outlined"
-            className="mb-3"
+            fullWidth
+            margin="normal"
             value={formData.loanPurpose}
             onChange={handleChange}
           />
           <TextField
-            margin="dense"
             id="repaymentTerm"
             label="Repayment Term"
-            type="text"
-            fullWidth
             variant="outlined"
-            className="mb-3"
+            fullWidth
+            margin="normal"
             value={formData.repaymentTerm}
             onChange={handleChange}
           />
@@ -137,4 +128,3 @@ const ApplicationForm = ({ open, handleClose }) => {
 };
 
 export default ApplicationForm;
-

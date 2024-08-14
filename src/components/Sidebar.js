@@ -19,8 +19,46 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import InvestIcon from '@mui/icons-material/AccountBalance';
 import FaqIcon from '@mui/icons-material/QuestionAnswer';
 import DeleteIcon from '@mui/icons-material/Delete';
-import LogoutIcon from '@mui/icons-material/Logout'; // Import the Logout icon
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+
+// Styled components
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  '& .MuiDrawer-paper': {
+    backgroundColor: '#1c1c1c', // Dark background for the sidebar
+    color: '#ffffff',
+    width: 250,
+    borderRadius: '0 20px 20px 0', // Rounded corners
+    padding: theme.spacing(2),
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)', // Subtle shadow effect
+  },
+}));
+
+const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  margin: theme.spacing(1, 0), // Spacing between items
+  padding: theme.spacing(1.5, 2), // Increased padding for larger clickable area
+  transition: 'background-color 0.3s ease', // Smooth transition
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Light hover effect
+  },
+}));
+
+const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+  color: '#ffffff', // White icons
+  minWidth: '40px', // Increased icon spacing
+}));
+
+const SidebarHeader = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+}));
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,24 +77,28 @@ export default function Sidebar() {
   };
 
   const handleLogout = () => {
-    // Navigate to the Logout component or perform logout logic here
     navigate('/logout');
     setIsOpen(false);
   };
 
   const list = () => (
     <Box
-      sx={{ width: 250 }}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
+      <SidebarHeader>
+        <Typography variant="h6" color="inherit">
+          My Application
+        </Typography>
+      </SidebarHeader>
+      <Divider sx={{ backgroundColor: '#ffffff' }} />
       <List>
         {[
           { text: 'Home', icon: <HomeIcon />, path: '/home' },
           { text: 'Loan', icon: <AttachMoneyIcon />, path: '/loan' },
           { text: 'Payment Process', icon: <PaymentIcon />, path: '/payment-process' },
-          { text: 'Interst Calculation', icon: <InfoIcon />, path: '/dic' },
+          { text: 'Interest Calculation', icon: <InfoIcon />, path: '/dic' },
           { text: 'Customer Support', icon: <SupportIcon />, path: '/customer-support' },
           { text: 'Security & Compliance', icon: <SecurityIcon />, path: '/security-compliance' },
           { text: 'Analytic Report', icon: <AnalyticsIcon />, path: '/analytic-report' },
@@ -66,19 +108,20 @@ export default function Sidebar() {
           { text: 'Trash', icon: <DeleteIcon />, path: '/trash' },
         ].map(({ text, icon, path }) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => navigateTo(path)}>
-              <ListItemIcon>{icon}</ListItemIcon>
+            <StyledListItemButton onClick={() => navigateTo(path)}>
+              <StyledListItemIcon>{icon}</StyledListItemIcon>
               <ListItemText primary={text} />
-            </ListItemButton>
+            </StyledListItemButton>
           </ListItem>
         ))}
       </List>
+      <Divider sx={{ backgroundColor: '#ffffff' }} />
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={handleLogout}>
-            <ListItemIcon><LogoutIcon /></ListItemIcon>
+          <StyledListItemButton onClick={handleLogout}>
+            <StyledListItemIcon><LogoutIcon /></StyledListItemIcon>
             <ListItemText primary="Log Out" />
-          </ListItemButton>
+          </StyledListItemButton>
         </ListItem>
       </List>
     </Box>
@@ -94,13 +137,13 @@ export default function Sidebar() {
       >
         <MenuIcon />
       </IconButton>
-      <Drawer
+      <StyledDrawer
         anchor="left"
         open={isOpen}
         onClose={toggleDrawer(false)}
       >
         {list()}
-      </Drawer>
+      </StyledDrawer>
     </div>
   );
 }

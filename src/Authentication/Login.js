@@ -61,117 +61,91 @@ export const Login = () => {
   };
 
   return (
-    <ThemeProvider theme={customTheme}>
-      <Container fluid style={{ height: "500px", textAlign: "center" }}>
-        <Row>
-          <Col lg={6}>
-            <form onSubmit={handleSubmit}>
-              <Stack gap={1}>
-                <div className="pt-3"></div>
-                <div className="pt-5"></div>
-                <div>
-                  <Typography variant="h3">Welcome to Ai-Dundi</Typography>
-                </div>
-                <div>
-                  <Typography variant="h3">Login</Typography>
-                </div>
-                <div>
-                  <Typography variant="h4" className="pt-5">
-                    Don't you have an account
-                    <span>
-                      <Button
-                        sx={{
-                          borderRadius: "16px",
-                          marginBottom: "5px",
-                          textDecoration: "underline",
-                        }}
-                        color="black"
-                        onClick={handleSignupRedirect}
-                      >
-                        <Typography
-                          variant="h4"
-                          style={{ textDecoration: "underline" }}
-                        >
-                          Create an account
-                        </Typography>
-                      </Button>
-                    </span>
-                  </Typography>
-                </div>
+<ThemeProvider theme={customTheme}>
+  <Container fluid>
+    <Row className="form-container">
+      <Col lg={6} md={8} sm={10} xs={12}>
+        <form onSubmit={handleSubmit}>
+          <Stack gap={1}>
+            <Typography variant="h3">Welcome to Ai-Dundi</Typography>
+            <Typography variant="h3">Login</Typography>
+            <Typography variant="h4" className="pt-5">
+              Don't have an account?
+              <Button
+                sx={{
+                  borderRadius: "16px",
+                  marginBottom: "5px",
+                  textDecoration: "underline",
+                }}
+                color="black"
+                onClick={handleSignupRedirect}
+              >
+                <Typography
+                  variant="h4"
+                  style={{ textDecoration: "underline" }}
+                >
+                  Create an account
+                </Typography>
+              </Button>
+            </Typography>
 
-                {error && (
-                  <Typography color="error" variant="h6" className="pt-3">
-                    {error}
-                  </Typography>
-                )}
+            {error && (
+              <Typography color="error" variant="h6" className="pt-3">
+                {error}
+              </Typography>
+            )}
 
-                <div className="pt-3 d-flex justify-content-center">
-                  <Col lg={8}>
-                    <TextField
-                      style={{ marginBottom: 20 }}
-                      className="auth_text_field"
-                      type="email"
-                      label="Email"
-                      color="black"
-                      fullWidth
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </Col>
-                </div>
-                <div className="d-flex justify-content-center">
-                  <Col lg={8}>
-                    <TextField
-                      style={{ marginBottom: 20 }}
-                      className="auth_text_field"
-                      type="password"
-                      label="Password"
-                      color="black"
-                      fullWidth
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </Col>
-                </div>
+            <TextField
+              className="auth_text_field"
+              type="email"
+              label="Email"
+              color="black"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-                <div className="pt-1 d-flex justify-content-center">
-                  <Col lg={8}>
-                    <Button
-                      className="authButton"
-                      type="submit"
-                      variant="contained"
-                      color="black"
-                      sx={{ borderRadius: "16px", width: "100%", height: 45 }}
-                    >
-                      <Typography variant="h5">Login</Typography>
-                    </Button>
-                  </Col>
-                </div>
-                <div className="d-flex justify-content-end pt-3">
-                  <Col lg={8}>
-                    <Button
-                      sx={{
-                        borderRadius: "16px",
-                        marginBottom: "5px",
-                        textDecoration: "underline",
-                      }}
-                      color="black"
-                    >
-                      <Typography
-                        variant="h4"
-                        style={{ textDecoration: "underline" }}
-                      >
-                        Forgot password
-                      </Typography>
-                    </Button>
-                  </Col>
-                </div>
-              </Stack>
-            </form>
-          </Col>
-          <Col className="background-image"></Col>
-        </Row>
-      </Container>
-    </ThemeProvider>
+            <TextField
+              className="auth_text_field"
+              type="password"
+              label="Password"
+              color="black"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <Button
+              className="authButton"
+              type="submit"
+              variant="contained"
+              color="black"
+            >
+              <Typography variant="h5">Login</Typography>
+            </Button>
+
+            <Button
+              sx={{
+                borderRadius: "16px",
+                marginBottom: "5px",
+                textDecoration: "underline",
+              }}
+              color="black"
+            >
+              <Typography
+                variant="h4"
+                style={{ textDecoration: "underline" }}
+              >
+                Forgot password
+              </Typography>
+            </Button>
+          </Stack>
+        </form>
+      </Col>
+      <Col lg={6} className="background-image"></Col>
+    </Row>
+  </Container>
+</ThemeProvider>
+
   );
 };

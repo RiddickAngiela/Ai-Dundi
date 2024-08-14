@@ -23,6 +23,7 @@ import FAQ from './components2/FAQ';
 import Trash from './components2/Trash';
 import EligibilityCheck from './components2/Loanfolder/EligibilityCheck'; // Corrected import
 import LoanApproval from './components2/Loanfolder/LoanApproval';
+import Agreement from './components2/Loanfolder/Agreement'; // Added import
 import Account from './components/Account';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -61,6 +62,7 @@ function App() {
               <Route path="/trash" element={<PrivateRoute element={<Trash />} />} />
               <Route path="/eligibility-check" element={<PrivateRoute element={<EligibilityCheck />} />} />
               <Route path="/loan-approval" element={<PrivateRoute element={<LoanApproval />} />} />
+              <Route path="/agreement" element={<PrivateRoute element={<Agreement />} />} /> {/* Added route */}
               <Route path="/logout" element={<Logout />} />
             </Routes>
             <Footer />
