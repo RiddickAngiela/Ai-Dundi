@@ -39,7 +39,7 @@ export const Login = () => {
     if (response.status === 200) {
       const { token } = response.data;
       localStorage.setItem('token', token); // Store the token in local storage
-      navigate("/account"); // Redirect to the account page
+      navigate("/"); 
     } else {
       setError("Invalid credentials. Please check your email and password.");
     }

@@ -21,7 +21,7 @@ const Agreement = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Agreement
+        Terms and Conditions
       </Typography>
       <Typography variant="body1" paragraph>
         This loan agreement (“Agreement”) is made between {applicationData?.fullName || '[Borrower Name]'} and [Lender Name]. This Agreement outlines the terms and conditions under which the lender agrees to provide a loan to the borrower.

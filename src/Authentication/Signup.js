@@ -48,7 +48,7 @@ export const Signup = () => {
     if (response.status === 201) {
       const { token } = response.data;
       localStorage.setItem('token', token); // Store the token in local storage
-      navigate("/account"); // Redirect to the account page
+      navigate("/"); // Redirect to the account page
     } else {
       setError("Signup failed. Please try again.");
     }

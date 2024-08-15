@@ -24,7 +24,7 @@ import Trash from './components2/Trash';
 import EligibilityCheck from './components2/Loanfolder/EligibilityCheck'; // Corrected import
 import LoanApproval from './components2/Loanfolder/LoanApproval';
 import Agreement from './components2/Loanfolder/Agreement'; // Added import
-import { Account } from './components/Account';
+import { Account }   from './components/Account';
 import PrivateRoute from './components/PrivateRoute';
 
 import { TrashProvider } from './contexts/TrashContext';
