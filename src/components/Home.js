@@ -115,8 +115,17 @@ const Home = () => {
   };
 
   const handleDeleteReview = (id) => {
-    // Logic to delete a specific review
-    setReviews((prev) => prev.filter((review) => review.id !== id));
+    fetch(`http://localhost:3000/api/reviews/${id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          setReviews((prev) => prev.filter((review) => review.id !== id));
+        } else {
+          console.error('Failed to delete review');
+        }
+      })
+      .catch((error) => console.error('Error deleting review:', error));
   };
 
   const toggleLikeReview = (id) => {

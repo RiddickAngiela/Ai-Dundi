@@ -24,39 +24,39 @@ export const Signup = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+  event.preventDefault();
+  
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
 
-    const userData = {
-      email,
-      password,
-      firstName: fullName.split(" ")[0], // Assumes first part of name is first name
-      lastName: fullName.split(" ")[1] || "" // Assumes second part of name is last name
-    };
+  const userData = {
+    email,
+    password,
+    firstName: fullName.split(" ")[0],
+    lastName: fullName.split(" ")[1] || ""
+  };
 
-    try {
-      const response = await axios.post("http://localhost:3000/api/users/register", userData, {
-         headers: {
-                'Content-Type': 'application/json', // Specify the content type
-                // Add any other headers you need here, e.g., Authorization
-                // 'Authorization': `Bearer ${token}`
-            }
-      });
+  try {
+    const response = await axios.post("http://localhost:3000/api/users/register", userData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      if (response.status === 201) { // Assuming 201 status code for successful creation
-        navigate("/home");
-      } else {
-        setError("Signup failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error during signup:", error);
+    if (response.status === 201) {
+      const { token } = response.data;
+      localStorage.setItem('token', token); // Store the token in local storage
+      navigate("/account"); // Redirect to the account page
+    } else {
       setError("Signup failed. Please try again.");
     }
-  };
+  } catch (error) {
+    setError("Signup failed. Please try again.");
+  }
+};
+
 
   return (
     <>

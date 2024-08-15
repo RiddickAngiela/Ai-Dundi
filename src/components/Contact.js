@@ -5,6 +5,7 @@ import { Container, Alert, Button } from 'react-bootstrap';
 import { TextField, Typography, Paper, Box, Grid, Divider } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { styled } from '@mui/system';
+import emailjs from 'emailjs-com';
 
 // Styled components
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -49,16 +50,27 @@ const Contact = () => {
     }
 
     setError('');
-    setSuccess(true);
+    setSuccess(false);
 
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      message: '',
+    // Send email using EmailJS
+   emailjs.send(
+  process.env.REACT_APP_EMAILJS_SERVICE_ID,
+  process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+  formData,
+  process.env.REACT_APP_EMAILJS_USER_ID // Ensure this is correctly set
+)
+    .then((response) => {
+      setSuccess(true);
+      setFormData({
+        name: '',
+        email: '',
+        message: '',
+      });
+    })
+    .catch((error) => {
+      setError('Failed to send message. Please try again later.');
+      console.error('EmailJS error:', error);
     });
-
-    // Here you can also add logic to send form data to your server
   };
 
   return (

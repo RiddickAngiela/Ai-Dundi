@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography, Card, CardContent, Grid, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios'; // Ensure axios is installed and imported
 
 const LoanApproval = () => {
   const location = useLocation();
-  console.log('Location state:', location.state); // Log to check if data is passed
-  const { eligibilityData, applicationData } = location.state || {};
+  const [applicationData, setApplicationData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const applicationId = location.state?.applicationId; // Ensure applicationId is passed in location state
+
+  useEffect(() => {
+    const fetchApplicationData = async () => {
+      try {
+        // Fetch data from the API
+        const response = await axios.get(`/api/loan-applications/${applicationId}`);
+        setApplicationData(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (applicationId) {
+      fetchApplicationData();
+    }
+  }, [applicationId]);
+
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error}</Typography>;
 
   return (
     <Container className="my-4">
@@ -16,44 +41,16 @@ const LoanApproval = () => {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom></Typography>
-              {eligibilityData ? (
-                <div>
-                  <Typography><strong>First Name:</strong> {eligibilityData.firstName}</Typography>
-                  <Typography><strong>Last Name:</strong> {eligibilityData.lastName}</Typography>
-                  <Typography><strong>ID Number:</strong> {eligibilityData.idNumber}</Typography>
-                  <Typography><strong>Age:</strong> {eligibilityData.age}</Typography>
-                  <Typography><strong>Employment Status:</strong> {eligibilityData.employmentStatus}</Typography>
-                  <Typography><strong>Work ID:</strong> {eligibilityData.workId}</Typography>
-                  <Typography><strong>Next of Kin:</strong> {eligibilityData.nextOfKin}</Typography>
-                  <Typography><strong>Account Number:</strong> {eligibilityData.accountNumber}</Typography>
-                  <Typography><strong>Date of Birth:</strong> {eligibilityData.dateOfBirth}</Typography>
-                  <Typography><strong>Gender:</strong> {eligibilityData.gender}</Typography>
-                </div>
-              ) : (
-                <Typography>No eligibility data available.</Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} style={{ borderTop: '1px solid #ddd', paddingTop: '16px' }}>
-              <Typography variant="h6" gutterBottom>Loan Application Details</Typography>
+              <Typography variant="h6" gutterBottom>Eligibility Data</Typography>
               {applicationData ? (
                 <div>
                   <Typography><strong>Full Name:</strong> {applicationData.fullName}</Typography>
-                  <Typography><strong>Date of Birth:</strong> {applicationData.dob}</Typography>
+                  <Typography><strong>Date of Birth:</strong> {new Date(applicationData.dob).toLocaleDateString()}</Typography>
                   <Typography><strong>Address:</strong> {applicationData.address}</Typography>
-                  <Typography><strong>Annual Income:</strong> {applicationData.annualIncome}</Typography>
-                  <Typography><strong>Loan Amount:</strong> {applicationData.loanAmount}</Typography>
+                  <Typography><strong>Annual Income:</strong> ${applicationData.annualIncome.toFixed(2)}</Typography>
+                  <Typography><strong>Loan Amount:</strong> ${applicationData.loanAmount.toFixed(2)}</Typography>
                   <Typography><strong>Loan Purpose:</strong> {applicationData.loanPurpose}</Typography>
-                  <Typography><strong>Repayment Term:</strong> {applicationData.repaymentTerm}</Typography>
-                  <Typography
-                    style={{
-                      color: 'red',
-                      fontWeight: 'bold',
-                      marginTop: '8px'
-                    }}
-                  >
-                    <strong>Status:</strong> Pending
-                  </Typography>
+                  <Typography><strong>Repayment Term:</strong> {applicationData.repaymentTerm} months</Typography>
                 </div>
               ) : (
                 <Typography>No application data available.</Typography>
