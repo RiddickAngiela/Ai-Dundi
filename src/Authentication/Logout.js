@@ -5,14 +5,14 @@ const Logout = () => {
   const navigate = useNavigate();
 
   const handleLogout = useCallback(() => {
-    // Clear user data and tokens from local storage or state
+    // Clear user data and tokens from local storage
     localStorage.removeItem('token'); // Adjust based on your storage method
     localStorage.removeItem('userPreferences'); // Clear user preferences if needed
 
     // Optionally, you could store other details necessary for login or future sessions here
     // localStorage.setItem('loggedOut', 'true'); // Optional flag
 
-    // Redirect to the home page or login page
+    // Redirect to the login page after logout
     navigate('/login'); // Redirect to login page after logout
   }, [navigate]);
 

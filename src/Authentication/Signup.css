@@ -1,6 +1,40 @@
+.form-container {
+  height: 100vh;
+  text-align: center;
+}
+
+.form-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  margin-bottom: 1.5rem;
+}
+
+.error-message {
+  color: #f44336;
+}
+
+.auth_text_field {
+  margin-bottom: 1rem;
+}
+
+.authButton {
+  margin-top: 1rem;
+}
+
+.login-redirect {
+  margin-top: 1rem;
+}
+
 .background-image {
-  background-image: url(../assets/Login.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  height: 800px;
+  background-image: url(../assets/Login.png); /* Adjust the path as needed */
+  background-size: cover;
+  background-position: center;
 }

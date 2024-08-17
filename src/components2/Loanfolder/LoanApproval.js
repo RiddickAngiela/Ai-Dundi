@@ -1,36 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Container, Typography, Card, CardContent, Grid, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios'; // Ensure axios is installed and imported
 
 const LoanApproval = () => {
   const location = useLocation();
-  const [applicationData, setApplicationData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const applicationId = location.state?.applicationId; // Ensure applicationId is passed in location state
-
-  useEffect(() => {
-    const fetchApplicationData = async () => {
-      try {
-        // Fetch data from the API
-        const response = await axios.get(`/api/loan-applications/${applicationId}`);
-        setApplicationData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (applicationId) {
-      fetchApplicationData();
-    }
-  }, [applicationId]);
+  const { applicationData } = location.state || {};
+  const [loading] = React.useState(false); // Simulating loading state, modify as needed
 
   if (loading) return <Typography>Loading...</Typography>;
-  if (error) return <Typography>Error: {error}</Typography>;
+
+  // Default values and type-checking
+  const annualIncome = Number(applicationData?.annualIncome) || 0;
+  const loanAmount = Number(applicationData?.loanAmount) || 0;
 
   return (
     <Container className="my-4">
@@ -41,16 +22,29 @@ const LoanApproval = () => {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>Eligibility Data</Typography>
+              <Typography variant="h6" gutterBottom>Loan Data</Typography>
               {applicationData ? (
                 <div>
                   <Typography><strong>Full Name:</strong> {applicationData.fullName}</Typography>
                   <Typography><strong>Date of Birth:</strong> {new Date(applicationData.dob).toLocaleDateString()}</Typography>
                   <Typography><strong>Address:</strong> {applicationData.address}</Typography>
-                  <Typography><strong>Annual Income:</strong> ${applicationData.annualIncome.toFixed(2)}</Typography>
-                  <Typography><strong>Loan Amount:</strong> ${applicationData.loanAmount.toFixed(2)}</Typography>
+                  <Typography><strong>Annual Income:</strong> ${annualIncome.toFixed(2)}</Typography>
+                  <Typography><strong>Loan Amount:</strong> ${loanAmount.toFixed(2)}</Typography>
                   <Typography><strong>Loan Purpose:</strong> {applicationData.loanPurpose}</Typography>
                   <Typography><strong>Repayment Term:</strong> {applicationData.repaymentTerm} months</Typography>
+                  {applicationData && (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      style={{
+                        marginTop: '16px',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+                      }}
+                    >
+                      Loan Pending
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <Typography>No application data available.</Typography>
@@ -59,23 +53,8 @@ const LoanApproval = () => {
           </Grid>
         </CardContent>
       </Card>
-      {applicationData && (
-        <Button
-          variant="contained"
-          color="success"
-          style={{
-            position: 'fixed',
-            bottom: '16px',
-            right: '16px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
-          }}
-        >
-          Loan Pending
-        </Button>
-      )}
     </Container>
   );
 };
 
-export default LoanApproval;
+export default LoanApproval

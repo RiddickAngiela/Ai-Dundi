@@ -24,10 +24,11 @@ import Trash from './components2/Trash';
 import EligibilityCheck from './components2/Loanfolder/EligibilityCheck'; // Corrected import
 import LoanApproval from './components2/Loanfolder/LoanApproval';
 import Agreement from './components2/Loanfolder/Agreement'; // Added import
-import { Account }   from './components/Account';
+import { Account } from './components/Account';
 import PrivateRoute from './components/PrivateRoute';
 
 import { TrashProvider } from './contexts/TrashContext';
+import { ApplicationProvider } from './contexts/ApplicationContext'; // Added import
 
 function App() {
   const darkTheme = createTheme({
@@ -39,35 +40,37 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <TrashProvider>
-        <Router>
-          <Container>
-            <Header />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/account" element={<PrivateRoute element={<Account />} />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/loan" element={<PrivateRoute element={<Loan />} />} />
-              <Route path="/payment-process" element={<PrivateRoute element={<PaymentProcess />} />} />
-              <Route path="/dic" element={<PrivateRoute element={<DIC />} />} />
-              <Route path="/customer-support" element={<PrivateRoute element={<CustomerSupport />} />} />
-              <Route path="/security-compliance" element={<PrivateRoute element={<SecurityCompliance />} />} />
-              <Route path="/analytic-report" element={<PrivateRoute element={<AnalyticReport />} />} />
-              <Route path="/marketing-promotions" element={<PrivateRoute element={<MarketingPromotions />} />} />
-              <Route path="/investment" element={<PrivateRoute element={<Investment />} />} />
-              <Route path="/faq" element={<PrivateRoute element={<FAQ />} />} />
-              <Route path="/trash" element={<PrivateRoute element={<Trash />} />} />
-              <Route path="/eligibility-check" element={<PrivateRoute element={<EligibilityCheck />} />} />
-              <Route path="/loan-approval" element={<PrivateRoute element={<LoanApproval />} />} />
-              <Route path="/agreement" element={<PrivateRoute element={<Agreement />} />} /> {/* Added route */}
-              <Route path="/logout" element={<Logout />} />
-            </Routes>
-            <Footer />
-          </Container>
-        </Router>
+        <ApplicationProvider>
+          <Router>
+            <Container>
+              <Header />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/account" element={<PrivateRoute element={<Account />} />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/loan" element={<PrivateRoute element={<Loan />} />} />
+                <Route path="/payment-process" element={<PrivateRoute element={<PaymentProcess />} />} />
+                <Route path="/dic" element={<PrivateRoute element={<DIC />} />} />
+                <Route path="/customer-support" element={<PrivateRoute element={<CustomerSupport />} />} />
+                <Route path="/security-compliance" element={<PrivateRoute element={<SecurityCompliance />} />} />
+                <Route path="/analytic-report" element={<PrivateRoute element={<AnalyticReport />} />} />
+                <Route path="/marketing-promotions" element={<PrivateRoute element={<MarketingPromotions />} />} />
+                <Route path="/investment" element={<PrivateRoute element={<Investment />} />} />
+                <Route path="/faq" element={<PrivateRoute element={<FAQ />} />} />
+                <Route path="/trash" element={<PrivateRoute element={<Trash />} />} />
+                <Route path="/eligibility-check" element={<PrivateRoute element={<EligibilityCheck />} />} />
+                <Route path="/loan-approval" element={<PrivateRoute element={<LoanApproval />} />} />
+                <Route path="/agreement" element={<PrivateRoute element={<Agreement />} />} /> {/* Added route */}
+                <Route path="/logout" element={<Logout />} />
+              </Routes>
+              <Footer />
+            </Container>
+          </Router>
+        </ApplicationProvider>
       </TrashProvider>
     </ThemeProvider>
   );

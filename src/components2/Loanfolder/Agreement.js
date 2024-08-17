@@ -4,9 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const Agreement = () => {
   const [checked, setChecked] = useState(false);
-  const navigate = useNavigate(); // Import and initialize navigate
+  const navigate = useNavigate();
   const location = useLocation();
-  const { applicationData, eligibilityData } = location.state || {};
+  const { applicationData } = location.state || {};
 
   const handleCheckboxChange = (event) => {
     setChecked(event.target.checked);
@@ -14,7 +14,7 @@ const Agreement = () => {
 
   const handleNextClick = () => {
     if (checked) {
-      navigate('/loan-approval', { state: { applicationData, eligibilityData } });
+      navigate('/loan-approval', { state: { applicationData } });
     }
   };
 

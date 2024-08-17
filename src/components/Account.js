@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Button, Typography, Container, Avatar, IconButton, Paper, Grid, CircularProgress, TextField } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Container,
+  Avatar,
+  IconButton,
+  Paper,
+  Grid,
+  CircularProgress,
+  TextField,
+  Snackbar
+} from "@mui/material";
 import { ThemeProvider } from "@mui/material";
 import axios from "axios";
 import customTheme from "../components/theme";
 import { useNavigate } from "react-router-dom";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const Account = () => {
   const [userDetails, setUserDetails] = useState(null);
@@ -19,6 +35,7 @@ export const Account = () => {
     email: '',
     bio: ''
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,17 +56,22 @@ export const Account = () => {
         });
 
         if (response.status === 200) {
-          setUserDetails(response.data);
+          const { user } = response.data;
+          setUserDetails(user);
           setFormData({
-            firstName: response.data.user.firstName,
-            lastName: response.data.user.lastName,
-            email: response.data.user.email,
-            bio: response.data.user.bio || ''
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            bio: user.bio || ''
           });
+          if (user.profilePicture) {
+            setImagePreview(user.profilePicture);
+          }
         } else {
           setError("Failed to fetch user details.");
         }
-      } catch (error) {
+      } catch (err) {
+        console.error("Error fetching user details:", err.response?.data || err.message);
         setError("Error fetching user details. Please log in again.");
       } finally {
         setLoading(false);
@@ -66,8 +88,10 @@ export const Account = () => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setSelectedImage(file);
-    setImagePreview(URL.createObjectURL(file));
+    if (file) {
+      setSelectedImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handleImageUpload = async () => {
@@ -92,19 +116,16 @@ export const Account = () => {
       if (response.status === 200) {
         setUserDetails(prevDetails => ({
           ...prevDetails,
-          user: {
-            ...prevDetails.user,
-            profilePicture: response.data.imagePath,
-          },
+          profilePicture: response.data.imagePath,
         }));
         setSelectedImage(null);
-        setImagePreview(null);
-        alert("Image uploaded successfully!");
+        setImagePreview(response.data.imagePath);
+        setSnackbarOpen(true); // Show success snackbar
       } else {
         setError("Failed to upload image.");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Error uploading image:", err.response?.data || err.message);
       setError("Error uploading image.");
     }
   };
@@ -126,29 +147,31 @@ export const Account = () => {
     }
 
     try {
-      const response = await axios.put("http://localhost:3000/api/users/profile", formData, {
+      const response = await axios.post("http://localhost:3000/api/profile", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
 
       if (response.status === 200) {
         setUserDetails(prevDetails => ({
           ...prevDetails,
-          user: {
-            ...prevDetails.user,
-            ...formData
-          },
+          ...formData
         }));
         setEditMode(false);
-        alert("Profile updated successfully!");
+        setSnackbarOpen(true); // Show success snackbar
       } else {
         setError("Failed to update profile.");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Error updating profile:", err.response?.data || err.message);
       setError("Error updating profile.");
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   if (loading) {
@@ -208,17 +231,17 @@ export const Account = () => {
                   </>
                 ) : (
                   <>
-                    <Typography variant="h6">First Name: {userDetails.user.firstName}</Typography>
-                    <Typography variant="h6">Last Name: {userDetails.user.lastName}</Typography>
-                    <Typography variant="h6">Email: {userDetails.user.email}</Typography>
-                    <Typography variant="h6">Bio: {userDetails.user.bio || 'No bio available'}</Typography>
+                    <Typography variant="h6">First Name: {userDetails.firstName}</Typography>
+                    <Typography variant="h6">Last Name: {userDetails.lastName}</Typography>
+                    <Typography variant="h6">Email: {userDetails.email}</Typography>
+                    <Typography variant="h6">Bio: {userDetails.bio || 'No bio available'}</Typography>
                   </>
                 )}
               </Grid>
               <Grid item xs={12} sm={6} container direction="column" alignItems="center">
                 <Avatar
-                  alt={`${userDetails.user.firstName} ${userDetails.user.lastName}`}
-                  src={imagePreview || userDetails.user.profilePicture}
+                  alt={`${userDetails.firstName} ${userDetails.lastName}`}
+                  src={imagePreview || userDetails.profilePicture}
                   sx={{ width: 150, height: 150, mb: 2 }}
                 />
                 <input
@@ -284,6 +307,11 @@ export const Account = () => {
           )}
         </Paper>
       </Container>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          Operation successful!
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };

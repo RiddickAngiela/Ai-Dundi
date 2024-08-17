@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Button, TextField, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
+import customTheme from "../components/theme";
 import Stack from "react-bootstrap/Stack";
 import { Container } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import customTheme from "../components/theme";
-import axios from 'axios'; // Import axios
 import "./Signup.css";
 
 export const Signup = () => {
@@ -24,162 +24,168 @@ export const Signup = () => {
   };
 
   const handleSubmit = async (event) => {
-  event.preventDefault();
-  
-  if (password !== confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    event.preventDefault();
 
-  const userData = {
-    email,
-    password,
-    firstName: fullName.split(" ")[0],
-    lastName: fullName.split(" ")[1] || ""
-  };
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-  try {
-    const response = await axios.post("http://localhost:3000/api/users/register", userData, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const userData = {
+      email,
+      password,
+      firstName: fullName.split(" ")[0],
+      lastName: fullName.split(" ")[1] || ""
+    };
 
-    if (response.status === 201) {
-      const { token } = response.data;
-      localStorage.setItem('token', token); // Store the token in local storage
-      navigate("/"); // Redirect to the account page
-    } else {
+    try {
+      const response = await axios.post("http://localhost:3000/api/users/register", userData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        const { token } = response.data;
+        localStorage.setItem('token', token); // Store the token in local storage
+        navigate("/"); // Redirect to the homepage
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+    } catch (error) {
       setError("Signup failed. Please try again.");
     }
-  } catch (error) {
-    setError("Signup failed. Please try again.");
-  }
-};
-
+  };
 
   return (
-    <>
-      <ThemeProvider theme={customTheme}>
-        <Container fluid style={{ height: "600px", textAlign: "center" }}>
-          <Row>
-            <Col lg={6}>
-              <form onSubmit={handleSubmit}>
-                <Stack gap={1}>
-                  <div className="pt-3"></div>
-                  <div className="pt-5"></div>
-                  <div>
-                    <Typography variant="h3">
-                      Welcome to Ai-Dundi 
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography variant="h3">Create Your Account</Typography>
-                  </div>
-                  {error && (
-                    <Typography variant="h6" color="error">
-                      {error}
-                    </Typography>
-                  )}
-                  <div className="pt-3 d-flex justify-content-center">
-                    <Col lg={8}>
-                      <TextField
-                        style={{ marginBottom: 20 }}
-                        className="auth_text_field"
-                        type="text"
-                        label="Full Name"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        color="black"
-                        fullWidth
-                      />
-                    </Col>
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    <Col lg={8}>
-                      <TextField
-                        style={{ marginBottom: 20 }}
-                        className="auth_text_field"
-                        type="email"
-                        label="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        color="black"
-                        fullWidth
-                      />
-                    </Col>
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    <Col lg={8}>
-                      <TextField
-                        style={{ marginBottom: 20 }}
-                        className="auth_text_field"
-                        type="password"
-                        label="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        color="black"
-                        fullWidth
-                      />
-                    </Col>
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    <Col lg={8}>
-                      <TextField
-                        style={{ marginBottom: 20 }}
-                        className="auth_text_field"
-                        type="password"
-                        label="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        color="black"
-                        fullWidth
-                      />
-                    </Col>
-                  </div>
-                  <div className="pt-1 d-flex justify-content-center">
-                    <Col lg={8}>
-                      <Button
-                        className="authButton"
-                        type="submit"
-                        variant="contained"
-                        color="black"
-                        sx={{ borderRadius: "16px", width: "100%", height: 45 }}
-                      >
-                        <Typography variant="h5">Sign Up</Typography>
-                      </Button>
-                    </Col>
-                  </div>
-                  <div className="pt-3">
-                    <Typography variant="h4">
-                      Already have an account?
-                      <span>
-                        <Button
-                          sx={{
-                            borderRadius: "16px",
-                            marginBottom: "5px",
-                            textDecoration: "underline",
-                          }}
-                          color="black"
-                          onClick={handleLoginRedirect}
-                        >
-                          <Typography
-                            variant="h4"
-                            style={{ textDecoration: "underline" }}
-                          >
-                            Login
-                          </Typography>
-                        </Button>
-                      </span>
-                    </Typography>
-                  </div>
-                </Stack>
-              </form>
-            </Col>
-            <Col className="background-image"></Col>
-          </Row>
-        </Container>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={customTheme}>
+      <Container fluid>
+        <Row className="form-container">
+          <Col lg={6} md={8} sm={10} xs={12} className="form-col">
+            <form onSubmit={handleSubmit}>
+              <Stack gap={1}>
+                <Typography variant="h3" className="title">
+                  Welcome to Ai-Dundi
+                </Typography>
+                <Typography variant="h4" className="subtitle">
+                  Create Your Account
+                </Typography>
+
+                {error && (
+                  <Typography color="error" variant="h6" className="error-message">
+                    {error}
+                  </Typography>
+                )}
+
+                <TextField
+                  className="auth_text_field"
+                  type="text"
+                  label="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#f0f0f0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3f51b5",
+                      },
+                    },
+                  }}
+                />
+
+                <TextField
+                  className="auth_text_field"
+                  type="email"
+                  label="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#f0f0f0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3f51b5",
+                      },
+                    },
+                  }}
+                />
+
+                <TextField
+                  className="auth_text_field"
+                  type="password"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#f0f0f0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3f51b5",
+                      },
+                    },
+                  }}
+                />
+
+                <TextField
+                  className="auth_text_field"
+                  type="password"
+                  label="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#f0f0f0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3f51b5",
+                      },
+                    },
+                  }}
+                />
+
+                <Button
+                  className="authButton"
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ borderRadius: "16px", width: "100%", height: 45 }}
+                >
+                  <Typography variant="h5">Sign Up</Typography>
+                </Button>
+
+                <Typography variant="h6" className="login-redirect">
+                  Already have an account?{" "}
+                  <Button
+                    sx={{
+                      textDecoration: "underline",
+                      color: "#3f51b5",
+                      borderRadius: "16px",
+                    }}
+                    onClick={handleLoginRedirect}
+                  >
+                    Login
+                  </Button>
+                </Typography>
+              </Stack>
+            </form>
+          </Col>
+          <Col lg={6} className="background-image"></Col>
+        </Row>
+      </Container>
+    </ThemeProvider>
   );
 };

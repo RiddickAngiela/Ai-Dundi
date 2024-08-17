@@ -8,6 +8,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 import image4 from '../assets/business-loan.png'; // Example image
 import image1 from '../assets/car-loan.png'; // Replace with your image paths
 import image2 from '../assets/mortgage-loan.png';
@@ -68,6 +69,18 @@ const IconContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   marginTop: theme.spacing(1),
+}));
+
+const ProcessOverviewSection = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(4),
+  backgroundColor: '#ffffff',
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[1],
+  marginTop: theme.spacing(4),
+}));
+
+const ProcessStep = styled(Typography)(({ theme }) => ({
+  margin: theme.spacing(1, 0),
 }));
 
 const carouselImages = [image1, image2, image3, image4, image5]; // Add paths to your images
@@ -164,6 +177,26 @@ const Home = () => {
                 </Carousel.Item>
               ))}
             </Carousel>
+
+            {/* Process Overview Section */}
+            <ProcessOverviewSection>
+              <Typography variant="h5" gutterBottom>
+                Loan Process Overview
+              </Typography>
+              <Row>
+                <Col xs={12} md={6}>
+                  <ProcessStep variant="body1">1. Apply online</ProcessStep>
+                  <ProcessStep variant="body1">2. Get approved</ProcessStep>
+                  <ProcessStep variant="body1">3. Accept offer</ProcessStep>
+                  <ProcessStep variant="body1">4. Receive funds</ProcessStep>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Typography variant="body2" color="textSecondary">
+                    This provides transparency into what to expect. Follow these steps to get your loan processed smoothly.
+                  </Typography>
+                </Col>
+              </Row>
+            </ProcessOverviewSection>
           </Col>
           <Col xs={12} md={4}>
             <ReviewSection>

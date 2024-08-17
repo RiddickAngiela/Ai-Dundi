@@ -22,125 +22,145 @@ export const Login = () => {
   };
 
   const handleSubmit = async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  const userData = {
-    email,
-    password,
+    const userData = {
+      email,
+      password,
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/users/login", userData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        const { token } = response.data;
+        localStorage.setItem('token', token); // Store the token in local storage
+        navigate("/"); 
+      } else {
+        setError("Invalid credentials. Please check your email and password.");
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message || "An unexpected error occurred. Please try again.");
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Error in setting up the request. Please try again.");
+      }
+    }
   };
 
-  try {
-    const response = await axios.post("http://localhost:3000/api/users/login", userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status === 200) {
-      const { token } = response.data;
-      localStorage.setItem('token', token); // Store the token in local storage
-      navigate("/"); 
-    } else {
-      setError("Invalid credentials. Please check your email and password.");
-    }
-  } catch (error) {
-    if (error.response) {
-      setError(error.response.data.message || "An unexpected error occurred. Please try again.");
-    } else if (error.request) {
-      setError("No response from server. Please check your connection.");
-    } else {
-      setError("Error in setting up the request. Please try again.");
-    }
-  }
-};
-
-
   return (
-<ThemeProvider theme={customTheme}>
-  <Container fluid>
-    <Row className="form-container">
-      <Col lg={6} md={8} sm={10} xs={12}>
-        <form onSubmit={handleSubmit}>
-          <Stack gap={1}>
-            <Typography variant="h3">Welcome to Ai-Dundi</Typography>
-            <Typography variant="h3">Login</Typography>
-            <Typography variant="h4" className="pt-5">
-              Don't have an account?
-              <Button
-                sx={{
-                  borderRadius: "16px",
-                  marginBottom: "5px",
-                  textDecoration: "underline",
-                }}
-                color="black"
-                onClick={handleSignupRedirect}
-              >
-                <Typography
-                  variant="h4"
-                  style={{ textDecoration: "underline" }}
-                >
-                  Create an account
+    <ThemeProvider theme={customTheme}>
+      <Container fluid>
+        <Row className="form-container">
+          <Col lg={6} md={8} sm={10} xs={12}>
+            <form onSubmit={handleSubmit}>
+              <Stack gap={1}>
+                <Typography variant="h3">Welcome to Ai-Dundi</Typography>
+                <Typography variant="h3">Login</Typography>
+                <Typography variant="h4" className="pt-5">
+                  Don't have an account?
+                  <Button
+                    sx={{
+                      borderRadius: "16px",
+                      marginBottom: "5px",
+                      textDecoration: "underline",
+                    }}
+                    color="black"
+                    onClick={handleSignupRedirect}
+                  >
+                    <Typography
+                      variant="h4"
+                      style={{ textDecoration: "underline" }}
+                    >
+                      Create an account
+                    </Typography>
+                  </Button>
                 </Typography>
-              </Button>
-            </Typography>
 
-            {error && (
-              <Typography color="error" variant="h6" className="pt-3">
-                {error}
-              </Typography>
-            )}
+                {error && (
+                  <Typography color="error" variant="h6" className="pt-3">
+                    {error}
+                  </Typography>
+                )}
 
-            <TextField
-              className="auth_text_field"
-              type="email"
-              label="Email"
-              color="black"
-              fullWidth
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+                <TextField
+                  className="auth_text_field"
+                  type="email"
+                  label="Email"
+                  color="primary" // Changed from "black" to "primary" for consistency
+                  fullWidth
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#f0f0f0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3f51b5",
+                      },
+                    },
+                  }}
+                />
 
-            <TextField
-              className="auth_text_field"
-              type="password"
-              label="Password"
-              color="black"
-              fullWidth
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+                <TextField
+                  className="auth_text_field"
+                  type="password"
+                  label="Password"
+                  color="primary" // Changed from "black" to "primary" for consistency
+                  fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#f0f0f0",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3f51b5",
+                      },
+                    },
+                  }}
+                />
 
-            <Button
-              className="authButton"
-              type="submit"
-              variant="contained"
-              color="black"
-            >
-              <Typography variant="h5">Login</Typography>
-            </Button>
+                <Button
+                  className="authButton"
+                  type="submit"
+                  variant="contained"
+                  color="primary" // Changed from "black" to "primary" for consistency
+                >
+                  <Typography variant="h5">Login</Typography>
+                </Button>
 
-            <Button
-              sx={{
-                borderRadius: "16px",
-                marginBottom: "5px",
-                textDecoration: "underline",
-              }}
-              color="black"
-            >
-              <Typography
-                variant="h4"
-                style={{ textDecoration: "underline" }}
-              >
-                Forgot password
-              </Typography>
-            </Button>
-          </Stack>
-        </form>
-      </Col>
-      <Col lg={6} className="background-image"></Col>
-    </Row>
-  </Container>
-</ThemeProvider>
-
+                <Button
+                  sx={{
+                    borderRadius: "16px",
+                    marginBottom: "5px",
+                    textDecoration: "underline",
+                  }}
+                  color="black"
+                >
+                  <Typography
+                    variant="h4"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Forgot password
+                  </Typography>
+                </Button>
+              </Stack>
+            </form>
+          </Col>
+          <Col lg={6} className="background-image"></Col>
+        </Row>
+      </Container>
+    </ThemeProvider>
   );
 };
