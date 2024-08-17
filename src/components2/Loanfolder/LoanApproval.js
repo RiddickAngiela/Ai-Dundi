@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import { Container, Typography, Card, CardContent, Grid, Button, Paper } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+// In src/components2/Loanfolder/LoanApproval.js and src/components/Header.js
+import { useLoan } from '../../contexts/LoanContext';
 
 const LoanApproval = () => {
   const location = useLocation();
   const { applicationData } = location.state || {};
-  const [loading, setLoading] = useState(false); // State for loading
-  const [error, setError] = useState(null); // State for error handling
-  const [submitted, setSubmitted] = useState(false); // State for submission status
+  const { setLoanStatus } = useLoan(); // Get the setLoanStatus function from context
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
-  // Default values and type-checking
   const annualIncome = Number(applicationData?.annualIncome) || 0;
   const loanAmount = Number(applicationData?.loanAmount) || 0;
 
   const handleSubmit = async () => {
-    setLoading(true); // Start loading
-    setError(null); // Reset error state
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/loanapproval/submit', { // Updated URL
+      const response = await fetch('http://localhost:3000/api/loanapproval/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,14 +35,14 @@ const LoanApproval = () => {
       const data = await response.json();
       console.log('Loan application submitted successfully:', data);
 
-      // Handle successful submission
       setSubmitted(true);
+      setLoanStatus('pending'); // Update loan status in context
       alert('Loan application submitted successfully!');
     } catch (error) {
       console.error('Error submitting loan application:', error);
       setError('Failed to submit loan application. Please try again.');
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 

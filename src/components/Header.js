@@ -7,6 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Professional i
 import AnchorTemporaryDrawer from './Sidebar';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // Ensure the path is correct
+import { useLoan } from '../contexts/LoanContext'; // Import the LoanContext
 
 const Header = () => {
   const [state, setState] = React.useState({
@@ -17,8 +18,8 @@ const Header = () => {
   });
 
   const { isAuthenticated } = useAuth(); // Get authentication status and logout function
+  const { loanStatus } = useLoan(); // Get loan status from context
 
-  // Define the toggleDrawer function
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -35,19 +36,16 @@ const Header = () => {
         <Col className="d-flex justify-content-end align-items-center">
           {isAuthenticated ? (
             <>
-              {/* Render hamburger menu and icons when authenticated */}
               <Link to="/loan-approval">
                 <IconButton className="text-dark mx-2">
-                  <CheckCircleIcon />
+                  <CheckCircleIcon color={loanStatus === 'pending' ? 'primary' : 'action'} />
                 </IconButton>
               </Link>
-                <IconButton className="text-dark mx-2">
-                               <Link to="/account">
-
+              <IconButton className="text-dark mx-2">
+                <Link to="/account">
                   <AccountCircleIcon />
-                                </Link>
-
-                </IconButton>
+                </Link>
+              </IconButton>
               <IconButton className="text-dark mx-2">
                 <NotificationsIcon />
               </IconButton>
@@ -55,7 +53,6 @@ const Header = () => {
             </>
           ) : (
             <Nav className="mr-auto">
-              {/* Render Login and Signup buttons when not authenticated */}
               <Link to="/login">
                 <Button variant="outlined" className="mx-2" style={{ borderColor: '#000000', color: '#000000' }}>
                   Login
@@ -76,4 +73,3 @@ const Header = () => {
 };
 
 export default Header;
-
