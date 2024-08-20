@@ -29,6 +29,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 import { TrashProvider } from './contexts/TrashContext';
 import { ApplicationProvider } from './contexts/ApplicationContext'; // Added import
+import Notification from './components/Notification';
 
 function App() {
   const darkTheme = createTheme({
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/trash" element={<PrivateRoute element={<Trash />} />} />
                 <Route path="/eligibility-check" element={<PrivateRoute element={<EligibilityCheck />} />} />
                 <Route path="/loan-approval" element={<PrivateRoute element={<LoanApproval />} />} />
+                <Route path="/notifications" element={<Notification />} />
                 <Route path="/agreement" element={<PrivateRoute element={<Agreement />} />} /> {/* Added route */}
                 <Route path="/logout" element={<Logout />} />
               </Routes>
