@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Carousel } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Carousel, Card } from 'react-bootstrap';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
@@ -7,6 +7,7 @@ import { Rating } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import image1 from '../assets/car-loan.png';
 import image2 from '../assets/mortgage-loan.png';
 import image3 from '../assets/personal-loan.png';
@@ -15,25 +16,30 @@ import image5 from '../assets/student-loan.png';
 
 // Styled components
 const MainContainer = styled('div')(({ theme }) => ({
-  backgroundColor: '#f4f4f9',
+  backgroundColor: '#f9fafc',
   padding: theme.spacing(5),
   minHeight: '100vh',
+  fontFamily: "'Roboto', sans-serif",
 }));
 
 const ReviewSection = styled('section')(({ theme }) => ({
   padding: theme.spacing(4),
   backgroundColor: '#ffffff',
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[2],
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
   marginTop: theme.spacing(4),
+  position: 'relative',
+  maxWidth: '100%',
+  overflowX: 'auto', // Prevent overflow
 }));
 
-const ReviewItem = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
+const ReviewItem = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
-  borderBottom: '1px solid #eeeeee',
-  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 }));
 
 const ReviewAvatar = styled(Avatar)(({ theme }) => ({
@@ -43,9 +49,11 @@ const ReviewAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const ReviewContent = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  flex: 1,
+}));
+
+const ReviewText = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
 }));
 
 const ReviewForm = styled(Form)(({ theme }) => ({
@@ -63,17 +71,11 @@ const ReviewButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const IconContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginTop: theme.spacing(1),
-}));
-
 const ProcessOverviewSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
   backgroundColor: '#ffffff',
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[1],
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
   marginTop: theme.spacing(4),
 }));
 
@@ -83,10 +85,13 @@ const ProcessStep = styled(Typography)(({ theme }) => ({
 
 const AIAssistantSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
-  backgroundColor: '#f9f9f9',
+  backgroundColor: '#ffffff',
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[1],
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
   marginTop: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 }));
 
 const carouselImages = [image1, image2, image3, image4, image5];
@@ -95,7 +100,7 @@ const Home = () => {
   const [reviewData, setReviewData] = useState({ review: '', rating: 1, username: '', image: '' });
   const [reviews, setReviews] = useState([]);
   const [loanInfo, setLoanInfo] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
+  const [aiResponse, setAiResponse] = useState([]);
   const [aiError, setAiError] = useState('');
 
   useEffect(() => {
@@ -147,7 +152,7 @@ const Home = () => {
   const handleAiSubmit = async (e) => {
     e.preventDefault();
     setAiError('');
-    setAiResponse('');
+    setAiResponse([]);
 
     try {
       const response = await fetch('http://localhost:3000/api/loans-Ai', {
@@ -163,7 +168,8 @@ const Home = () => {
       }
 
       const data = await response.json();
-      setAiResponse(data.details || 'No details available');
+      const points = data.details ? data.details.split('\n') : ['No details available'];
+      setAiResponse(points);
     } catch (error) {
       console.error('Error fetching AI response:', error);
       setAiError('Failed to get response from AI.');
@@ -174,6 +180,7 @@ const Home = () => {
     <MainContainer>
       <Container>
         <Row>
+          {/* Main content */}
           <Col xs={12} md={8}>
             <Typography variant="h4" gutterBottom>
               Welcome to Ai-Dundi Loan App
@@ -184,7 +191,7 @@ const Home = () => {
             <Typography variant="h6" paragraph>
               Check out our latest reviews and share your experience with us.
             </Typography>
-            
+
             {/* Image Carousel */}
             <Carousel interval={2000}>
               {carouselImages.map((img, index) => (
@@ -193,7 +200,7 @@ const Home = () => {
                     className="d-block w-100"
                     src={img}
                     alt={`Slide ${index + 1}`}
-                    style={{ height: '400px', objectFit: 'cover' }}
+                    style={{ height: '500px', objectFit: 'cover' }}
                   />
                 </Carousel.Item>
               ))}
@@ -227,78 +234,88 @@ const Home = () => {
               <Typography variant="body1" paragraph>
                 Have questions or need assistance? Our AI assistant is ready to help with any inquiries about our loan services or application process.
               </Typography>
-              <Form onSubmit={handleAiSubmit}>
-                <Form.Group controlId="aiQuestion">
+              <Form onSubmit={handleAiSubmit} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <Form.Group controlId="aiQuestion" style={{ flexGrow: 1 }}>
                   <Form.Control
                     as="textarea"
-                    rows={3}
+                    rows={2}
                     placeholder="Type your question here..."
                     value={loanInfo}
                     onChange={(e) => setLoanInfo(e.target.value)}
+                    style={{ borderRadius: '30px', padding: '1rem', fontSize: '1rem' }}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
+                <IconButton type="submit" color="primary" aria-label="ask">
+                  <ArrowUpwardIcon />
+                </IconButton>
               </Form>
-              {aiResponse && (
-                <Typography variant="body1" paragraph>
-                  {aiResponse}
-                </Typography>
+              {aiResponse.length > 0 && (
+                <ul>
+                  {aiResponse.map((point, index) => (
+                    <li key={index}>{point}</li>
+                  ))}
+                </ul>
               )}
-              {aiError && (
-                <Typography variant="body2" color="error" paragraph>
-                  {aiError}
-                </Typography>
-              )}
+              {aiError && <Typography color="error">{aiError}</Typography>}
             </AIAssistantSection>
           </Col>
+
+          {/* Review Section */}
           <Col xs={12} md={4}>
             <ReviewSection>
               <Typography variant="h5" gutterBottom>
-                Share Your Experience
+                Reviews
               </Typography>
               <ReviewForm onSubmit={handleReviewSubmit}>
                 <Form.Group controlId="username">
                   <Form.Control
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder="Your name"
                     name="username"
                     value={reviewData.username}
                     onChange={handleInputChange}
+                    required
                   />
                 </Form.Group>
                 <Form.Group controlId="review">
                   <Form.Control
                     as="textarea"
                     rows={3}
-                    placeholder="Write your review here..."
+                    placeholder="Your review"
                     name="review"
                     value={reviewData.review}
                     onChange={handleInputChange}
+                    required
                   />
                 </Form.Group>
                 <Form.Group controlId="rating">
+                  <Form.Label>Rating</Form.Label>
                   <Rating
                     name="rating"
                     value={reviewData.rating}
-                    onChange={(e, value) => setReviewData((prev) => ({ ...prev, rating: value }))}
+                    onChange={(event, newValue) => setReviewData((prev) => ({ ...prev, rating: newValue }))}
+                  />
+                </Form.Group>
+                <Form.Group controlId="image">
+                  <Form.Control
+                    type="text"
+                    placeholder="Image URL (optional)"
+                    name="image"
+                    value={reviewData.image}
+                    onChange={handleInputChange}
                   />
                 </Form.Group>
                 <ReviewButton type="submit">Submit Review</ReviewButton>
               </ReviewForm>
 
-              {/* Review Items */}
               {reviews.map((review) => (
                 <ReviewItem key={review.id}>
+                  <ReviewAvatar src={review.image || ''} alt={review.username} />
                   <ReviewContent>
-                    <div>
-                      <ReviewAvatar alt={review.username} src={review.image} />
-                      <Typography variant="h6">{review.username}</Typography>
-                      <Typography variant="body2">{review.review}</Typography>
-                      <Rating value={review.rating} readOnly />
-                    </div>
-                    <IconButton onClick={() => handleDeleteReview(review.id)}>
+                    <Typography variant="h6">{review.username}</Typography>
+                    <ReviewText variant="body2">{review.review}</ReviewText>
+                    <Rating readOnly value={review.rating} />
+                    <IconButton onClick={() => handleDeleteReview(review.id)} color="error">
                       <DeleteOutlineIcon />
                     </IconButton>
                   </ReviewContent>

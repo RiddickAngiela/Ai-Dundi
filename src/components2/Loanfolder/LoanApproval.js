@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Typography, Card, CardContent, Grid, Button, Paper } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-// In src/components2/Loanfolder/LoanApproval.js and src/components/Header.js
 import { useLoan } from '../../contexts/LoanContext';
 
 const LoanApproval = () => {
@@ -36,7 +35,7 @@ const LoanApproval = () => {
       console.log('Loan application submitted successfully:', data);
 
       setSubmitted(true);
-      setLoanStatus('pending'); // Update loan status in context
+      setLoanStatus('pending'); // Update loan status and notification count in context
       alert('Loan application submitted successfully!');
     } catch (error) {
       console.error('Error submitting loan application:', error);

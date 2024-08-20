@@ -1,13 +1,13 @@
 import React from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
-import { Divider, IconButton, Typography, Button } from '@mui/material';
+import { Divider, IconButton, Typography, Button, Badge } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Professional icon for approval
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AnchorTemporaryDrawer from './Sidebar';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext'; // Ensure the path is correct
-import { useLoan } from '../contexts/LoanContext'; // Import the LoanContext
+import { useAuth } from '../contexts/AuthContext';
+import { useLoan } from '../contexts/LoanContext';
 
 const Header = () => {
   const [state, setState] = React.useState({
@@ -17,8 +17,8 @@ const Header = () => {
     right: false,
   });
 
-  const { isAuthenticated } = useAuth(); // Get authentication status and logout function
-  const { loanStatus } = useLoan(); // Get loan status from context
+  const { isAuthenticated } = useAuth();
+  const { loanStatus, notificationCount } = useLoan(); // Get notification count from context
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -47,7 +47,9 @@ const Header = () => {
                 </Link>
               </IconButton>
               <IconButton className="text-dark mx-2">
-                <NotificationsIcon />
+                <Badge badgeContent={notificationCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
               </IconButton>
               <AnchorTemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} />
             </>
