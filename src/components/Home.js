@@ -4,16 +4,14 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 import { Rating } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import image4 from '../assets/business-loan.png'; // Example image
-import image1 from '../assets/car-loan.png'; // Replace with your image paths
+import image1 from '../assets/car-loan.png';
 import image2 from '../assets/mortgage-loan.png';
 import image3 from '../assets/personal-loan.png';
-import image5 from '../assets/student-loan.png'; 
+import image4 from '../assets/business-loan.png';
+import image5 from '../assets/student-loan.png';
 
 // Styled components
 const MainContainer = styled('div')(({ theme }) => ({
@@ -83,14 +81,24 @@ const ProcessStep = styled(Typography)(({ theme }) => ({
   margin: theme.spacing(1, 0),
 }));
 
-const carouselImages = [image1, image2, image3, image4, image5]; // Add paths to your images
+const AIAssistantSection = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(4),
+  backgroundColor: '#f9f9f9',
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[1],
+  marginTop: theme.spacing(4),
+}));
+
+const carouselImages = [image1, image2, image3, image4, image5];
 
 const Home = () => {
   const [reviewData, setReviewData] = useState({ review: '', rating: 1, username: '', image: '' });
   const [reviews, setReviews] = useState([]);
+  const [loanInfo, setLoanInfo] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [aiError, setAiError] = useState('');
 
   useEffect(() => {
-    // Fetch reviews from the backend
     fetch('http://localhost:3000/api/reviews')
       .then((response) => response.json())
       .then((data) => setReviews(data))
@@ -111,12 +119,7 @@ const Home = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: reviewData.username,
-          image: reviewData.image,
-          review: reviewData.review,
-          rating: reviewData.rating,
-        }),
+        body: JSON.stringify(reviewData),
       })
         .then((response) => response.json())
         .then((newReview) => {
@@ -141,12 +144,30 @@ const Home = () => {
       .catch((error) => console.error('Error deleting review:', error));
   };
 
-  const toggleLikeReview = (id) => {
-    setReviews((prev) =>
-      prev.map((review) =>
-        review.id === id ? { ...review, liked: !review.liked } : review
-      )
-    );
+  const handleAiSubmit = async (e) => {
+    e.preventDefault();
+    setAiError('');
+    setAiResponse('');
+
+    try {
+      const response = await fetch('http://localhost:3000/api/loans-Ai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ loanInfo }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setAiResponse(data.details || 'No details available');
+    } catch (error) {
+      console.error('Error fetching AI response:', error);
+      setAiError('Failed to get response from AI.');
+    }
   };
 
   return (
@@ -158,10 +179,10 @@ const Home = () => {
               Welcome to Ai-Dundi Loan App
             </Typography>
             <Typography variant="h6" paragraph>
-              We offer a range of flexible loan options to meet your financial needs. From personal loans to business financing, explore our solutions designed to make your life easier.
+              Explore our flexible loan options tailored to your needs, from personal loans to business financing.
             </Typography>
             <Typography variant="h6" paragraph>
-              Check out our latest reviews and share your experience with us. Your feedback helps us improve and provide better services.
+              Check out our latest reviews and share your experience with us.
             </Typography>
             
             {/* Image Carousel */}
@@ -192,11 +213,45 @@ const Home = () => {
                 </Col>
                 <Col xs={12} md={6}>
                   <Typography variant="body2" color="textSecondary">
-                    This provides transparency into what to expect. Follow these steps to get your loan processed smoothly.
+                    Follow these steps to process your loan smoothly and with transparency.
                   </Typography>
                 </Col>
               </Row>
             </ProcessOverviewSection>
+
+            {/* AI Assistant Section */}
+            <AIAssistantSection>
+              <Typography variant="h5" gutterBottom>
+                Ask Our AI Assistant
+              </Typography>
+              <Typography variant="body1" paragraph>
+                Have questions or need assistance? Our AI assistant is ready to help with any inquiries about our loan services or application process.
+              </Typography>
+              <Form onSubmit={handleAiSubmit}>
+                <Form.Group controlId="aiQuestion">
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    placeholder="Type your question here..."
+                    value={loanInfo}
+                    onChange={(e) => setLoanInfo(e.target.value)}
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              </Form>
+              {aiResponse && (
+                <Typography variant="body1" paragraph>
+                  {aiResponse}
+                </Typography>
+              )}
+              {aiError && (
+                <Typography variant="body2" color="error" paragraph>
+                  {aiError}
+                </Typography>
+              )}
+            </AIAssistantSection>
           </Col>
           <Col xs={12} md={4}>
             <ReviewSection>
@@ -207,67 +262,46 @@ const Home = () => {
                 <Form.Group controlId="username">
                   <Form.Control
                     type="text"
+                    placeholder="Enter your name"
                     name="username"
                     value={reviewData.username}
                     onChange={handleInputChange}
-                    placeholder="Your Name"
-                    required
-                  />
-                </Form.Group>
-                <Form.Group controlId="image">
-                  <Form.Control
-                    type="text"
-                    name="image"
-                    value={reviewData.image}
-                    onChange={handleInputChange}
-                    placeholder="Image URL (optional)"
-                  />
-                </Form.Group>
-                <Form.Group controlId="rating">
-                  <Rating
-                    name="rating"
-                    value={parseInt(reviewData.rating)}
-                    onChange={(event, newValue) => setReviewData((prev) => ({ ...prev, rating: newValue }))}
-                    precision={0.5}
                   />
                 </Form.Group>
                 <Form.Group controlId="review">
                   <Form.Control
                     as="textarea"
                     rows={3}
+                    placeholder="Write your review here..."
                     name="review"
                     value={reviewData.review}
                     onChange={handleInputChange}
-                    placeholder="Your Review"
-                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="rating">
+                  <Rating
+                    name="rating"
+                    value={reviewData.rating}
+                    onChange={(e, value) => setReviewData((prev) => ({ ...prev, rating: value }))}
                   />
                 </Form.Group>
                 <ReviewButton type="submit">Submit Review</ReviewButton>
               </ReviewForm>
+
+              {/* Review Items */}
               {reviews.map((review) => (
                 <ReviewItem key={review.id}>
-                  <ReviewAvatar src={review.image || '/default-avatar.png'} />
                   <ReviewContent>
-                    <div style={{ flex: 1 }}>
+                    <div>
+                      <ReviewAvatar alt={review.username} src={review.image} />
                       <Typography variant="h6">{review.username}</Typography>
+                      <Typography variant="body2">{review.review}</Typography>
                       <Rating value={review.rating} readOnly />
-                      <Typography variant="body1">{review.review}</Typography>
                     </div>
-                  </ReviewContent>
-                  <IconContainer>
-                    <IconButton
-                      style={{ color: review.liked ? 'red' : 'inherit' }}
-                      onClick={() => toggleLikeReview(review.id)}
-                    >
-                      {review.liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                    <IconButton
-                      style={{ color: 'inherit' }}
-                      onClick={() => handleDeleteReview(review.id)}
-                    >
+                    <IconButton onClick={() => handleDeleteReview(review.id)}>
                       <DeleteOutlineIcon />
                     </IconButton>
-                  </IconContainer>
+                  </ReviewContent>
                 </ReviewItem>
               ))}
             </ReviewSection>
@@ -279,3 +313,4 @@ const Home = () => {
 };
 
 export default Home;
+

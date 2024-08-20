@@ -1,9 +1,58 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Tabs, Tab } from 'react-bootstrap';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
+import axios from 'axios';
 
 const PaymentProcess = () => {
   const [key, setKey] = useState('card');
+
+  const [phone,setPhone] = useState('');
+  const [amount,setAmount] = useState('');
+
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  }
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
+  }
+
+  const makePayment = (e) =>{ 
+    e.preventDefault();
+
+    if(!amount){
+      alert('Please enter amount');
+      return;
+    }
+    if(!phone){
+      alert('Please enter phone number');
+      return;
+    }
+
+    const data = {
+      amount,
+      phone,
+      username: "Riddick"
+    };
+    const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': '3d9f65289e1b96f9b25f5f20da3ecea5'
+        }
+    };
+    axios.post('https://api.rotsi.co.ke/payments/stkPush/v1', data, config)
+     .then((response) => {
+        // console.log(response);
+        // Redirect to success page
+        alert('Success');
+        window.location.href = '/success';
+      })
+     .catch((error) => {
+        console.error(error);
+        alert('Error');
+        // Handle error
+        // Show error message to the user
+      });
+  }
 
   return (
     <Container>
@@ -69,12 +118,13 @@ const PaymentProcess = () => {
                   </Form>
                 </Tab>
                 <Tab eventKey="mpesa" title="M-Pesa">
-                  <Form>
+                  <Form> 
                     <Form.Group controlId="formMpesaNumber">
                       <TextField
                         label="M-Pesa Number"
                         variant="outlined"
                         fullWidth
+                        onChange={handlePhoneChange}
                         margin="normal"
                         required
                       />
@@ -82,15 +132,16 @@ const PaymentProcess = () => {
 
                     <Form.Group controlId="formMpesaCode">
                       <TextField
-                        label="M-Pesa Confirmation Code"
+                        label="M-Pesa Amount"
                         variant="outlined"
                         fullWidth
+                        onChange={handleAmountChange}
                         margin="normal"
                         required
                       />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit" className="mt-3">
+                    <Button variant="primary" onClick={makePayment} className="mt-3">
                       Submit Payment
                     </Button>
                   </Form>
@@ -105,3 +156,4 @@ const PaymentProcess = () => {
 };
 
 export default PaymentProcess;
+
