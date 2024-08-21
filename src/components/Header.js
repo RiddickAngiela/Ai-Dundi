@@ -18,7 +18,7 @@ const Header = () => {
   });
 
   const { isAuthenticated } = useAuth();
-  const { loanStatus, notificationCount } = useLoan(); // Get notification count from context
+  const { loanStatus, notificationCount, resetNotificationCount } = useLoan(); // Get the resetNotificationCount function
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -46,7 +46,7 @@ const Header = () => {
                   <AccountCircleIcon />
                 </Link>
               </IconButton>
-              <IconButton className="text-dark mx-2">
+              <IconButton className="text-dark mx-2" onClick={resetNotificationCount}>
                 <Badge badgeContent={notificationCount} color="error">
                   <NotificationsIcon />
                 </Badge>

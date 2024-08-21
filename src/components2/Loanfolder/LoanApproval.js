@@ -6,7 +6,7 @@ import { useLoan } from '../../contexts/LoanContext';
 const LoanApproval = () => {
   const location = useLocation();
   const { applicationData } = location.state || {};
-  const { setLoanStatus } = useLoan(); // Get the setLoanStatus function from context
+  const { setLoanStatus, incrementNotificationCount } = useLoan(); // Get the setLoanStatus and incrementNotificationCount functions from context
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -35,7 +35,8 @@ const LoanApproval = () => {
       console.log('Loan application submitted successfully:', data);
 
       setSubmitted(true);
-      setLoanStatus('pending'); // Update loan status and notification count in context
+      setLoanStatus('pending'); // Update loan status in context
+      incrementNotificationCount(); // Increment the notification count
       alert('Loan application submitted successfully!');
     } catch (error) {
       console.error('Error submitting loan application:', error);
