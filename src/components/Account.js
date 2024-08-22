@@ -64,8 +64,9 @@ export const Account = () => {
             email: user.email,
             bio: user.bio || ''
           });
+
           if (user.profilePicture) {
-            setImagePreview(user.profilePicture);
+            setImagePreview(`http://localhost:3000${user.profilePicture}`);
           }
         } else {
           setError("Failed to fetch user details.");
@@ -114,12 +115,13 @@ export const Account = () => {
       });
 
       if (response.status === 200) {
+        const imagePath = `http://localhost:3000${response.data.imagePath}`;
         setUserDetails(prevDetails => ({
           ...prevDetails,
-          profilePicture: response.data.imagePath,
+          profilePicture: imagePath,
         }));
         setSelectedImage(null);
-        setImagePreview(response.data.imagePath);
+        setImagePreview(imagePath);
         setSnackbarOpen(true); // Show success snackbar
       } else {
         setError("Failed to upload image.");

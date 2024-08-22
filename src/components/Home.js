@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 import { Rating } from '@mui/material';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+// import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -135,19 +135,19 @@ const Home = () => {
     }
   };
 
-  const handleDeleteReview = (id) => {
-    fetch(`http://localhost:3000/api/reviews/${id}`, {
-      method: 'DELETE',
-    })
-      .then((response) => {
-        if (response.ok) {
-          setReviews((prev) => prev.filter((review) => review.id !== id));
-        } else {
-          console.error('Failed to delete review');
-        }
-      })
-      .catch((error) => console.error('Error deleting review:', error));
-  };
+  // const handleDeleteReview = (id) => {
+  //   fetch(`http://localhost:3000/api/reviews/${id}`, {
+  //     method: 'DELETE',
+  //   })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         setReviews((prev) => prev.filter((review) => review.id !== id));
+  //       } else {
+  //         console.error('Failed to delete review');
+  //       }
+  //     })
+  //     .catch((error) => console.error('Error deleting review:', error));
+  // };
 
   const handleAiSubmit = async (e) => {
     e.preventDefault();
@@ -315,9 +315,9 @@ const Home = () => {
                     <Typography variant="h6">{review.username}</Typography>
                     <ReviewText variant="body2">{review.review}</ReviewText>
                     <Rating readOnly value={review.rating} />
-                    <IconButton onClick={() => handleDeleteReview(review.id)} color="error">
+                    {/* <IconButton onClick={() => handleDeleteReview(review.id)} color="error">
                       <DeleteOutlineIcon />
-                    </IconButton>
+                    </IconButton> */}
                   </ReviewContent>
                 </ReviewItem>
               ))}
